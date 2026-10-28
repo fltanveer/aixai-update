@@ -357,7 +357,7 @@ export default function OverviewContent() {
         <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">→</span>
       </Link>
     </nav>
-    <SmilPause ids={["rt-sub", "rt-own"]} />
+    <SmilPause />
     </>
   );
 }

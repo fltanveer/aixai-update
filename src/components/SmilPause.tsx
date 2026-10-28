@@ -2,20 +2,40 @@
 
 import { useEffect } from "react";
 
-/** SMIL scenes keep one shared clock; they stand still under reduced motion and pause off screen. */
-export default function SmilPause({ ids }: { ids: string[] }) {
+/**
+ * Every SMIL-animated drawing on the page keeps its own clock: it pauses while off screen,
+ * and under reduced motion it stands still on a representative frame. Drawings marked
+ * .smil-hover play only while their card is hovered (or, on touch screens, while on screen).
+ */
+const STILL: Record<string, number> = { "rt-sub": 3.8, "rt-own": 0.95 };
+
+export default function SmilPause() {
   useEffect(() => {
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const observers: IntersectionObserver[] = [];
-    ids.forEach((id) => {
-      const sv = document.getElementById(id) as SVGSVGElement | null;
-      if (!sv) return;
-      if (reduce) { sv.pauseAnimations(); sv.setCurrentTime(0.95 * (id === "rt-sub" ? 4 : 1)); return; }
-      const io = new IntersectionObserver(([e]) => (e.isIntersecting ? sv.unpauseAnimations() : sv.pauseAnimations()));
-      io.observe(sv);
-      observers.push(io);
+    const canHover = matchMedia("(hover: hover)").matches;
+    const svgs = [...document.querySelectorAll<SVGSVGElement>("main svg")].filter(
+      (s) => s.ownerSVGElement === null && s.querySelector("animate, animateMotion, animateTransform"),
+    );
+    if (reduce) {
+      svgs.forEach((sv) => { sv.pauseAnimations(); sv.setCurrentTime(STILL[sv.id] ?? 1.5); });
+      return;
+    }
+    const cleanups: (() => void)[] = [];
+    const visible = new IntersectionObserver((entries) =>
+      entries.forEach((e) => { const sv = e.target as SVGSVGElement; e.isIntersecting ? sv.unpauseAnimations() : sv.pauseAnimations(); }),
+    );
+    svgs.forEach((sv) => {
+      if (sv.classList.contains("smil-hover") && canHover) {
+        const card = (sv.closest("article, li, .mod") as HTMLElement) ?? sv;
+        sv.pauseAnimations();
+        const on = () => sv.unpauseAnimations();
+        const off = () => sv.pauseAnimations();
+        card.addEventListener("pointerenter", on);
+        card.addEventListener("pointerleave", off);
+        cleanups.push(() => { card.removeEventListener("pointerenter", on); card.removeEventListener("pointerleave", off); });
+      } else visible.observe(sv);
     });
-    return () => observers.forEach((io) => io.disconnect());
-  }, [ids]);
+    return () => { visible.disconnect(); cleanups.forEach((c) => c()); };
+  }, []);
   return null;
 }

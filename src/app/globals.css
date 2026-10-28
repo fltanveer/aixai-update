@@ -70,6 +70,12 @@ img.ph{outline:1px solid oklch(0 0 0/.1);outline-offset:-1px}
 .rk-vent{background:repeating-linear-gradient(90deg,#CFCBBE 0 2px,transparent 2px 7px);border-radius:2px}
 .rk-vent-l{background:repeating-linear-gradient(90deg,rgba(255,255,255,.18) 0 2px,transparent 2px 7px)}
 @media (prefers-reduced-motion:reduce){.rk-led{animation:none}}
+/* rack elevation: one quiet sign of life, the AI node's drive-bay activity lights */
+.rk-bay{position:relative}
+.rk-bay::after{content:"";position:absolute;right:4px;top:4px;width:4px;height:4px;border-radius:50%;background:#4CC27E;opacity:.3;animation:rk-bay 4.8s ease-in-out infinite;animation-delay:var(--d,0s)}
+@keyframes rk-bay{0%,100%{opacity:.3}45%,55%{opacity:.8}}
+@media (prefers-reduced-motion:reduce){.rk-bay::after{animation:none}}
+
 
 /* utilities after the custom rules, as the v5 CDN build had them, so a utility beats a component class */
 @tailwind components;
