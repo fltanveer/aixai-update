@@ -220,7 +220,7 @@ export default function PremisesFigure() {
           </div>
         </div>
       </div>
-      <figcaption id="iso-cap" className="mt-3 max-w-xl text-sm text-muted">
+      <figcaption id="iso-cap" className="mt-4 max-w-xl text-base text-muted">
         The operational layer spans both, because the sensors and actuators the AI acts on are distributed through the premises, not confined to the cabinet.
       </figcaption>
     </figure>

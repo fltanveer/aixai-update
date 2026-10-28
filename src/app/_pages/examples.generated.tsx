@@ -8,7 +8,7 @@ export default function ExamplesContent() {
     <>
     <section className="mx-auto grid max-w-page gap-8 px-5 pb-16 pt-14 md:px-8 md:pt-20 lg:grid-cols-12" aria-labelledby="ex-h">
       <h1 id="ex-h" className="d h1 lg:col-span-6">Pay for what you need</h1>
-      <p className="text-lg lg:col-span-5 lg:col-start-8 lg:pt-4">
+      <p className="text-lg font-medium md:text-xl md:leading-[1.6] lg:col-span-5 lg:col-start-8 lg:pt-4">
         The business and operational infrastructure (
         <span className="id">AI IT</span>
         /

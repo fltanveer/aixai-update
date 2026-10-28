@@ -9,7 +9,7 @@ export default function DomainsContent() {
         <p className="mod-t">Where it applies</p>
         <h1 id="dm-h" className="d h1 mt-4">Every premises domain</h1>
       </div>
-      <p className="text-lg lg:col-span-5 lg:col-start-8 lg:pt-12">
+      <p className="text-lg font-medium md:text-xl md:leading-[1.6] lg:col-span-5 lg:col-start-8 lg:pt-12">
         The framework follows the premises hierarchy the cabling standards already define. Generic cabling sits at the base —{" "}
         <span className="id">ANSI/TIA-568.0</span>
         , and{" "}

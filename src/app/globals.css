@@ -4,7 +4,7 @@
 :root{--canvas:#FBFBF8;--surface:#FFFFFE;--s2:#F2F1EC;--line:#E3E1D8;--ink:#17160F;--muted:#5D5B52;--acc:#F2C200;--edge:#7A6000;--ok:#1E7F49;--crit:#C2372C;--ease:cubic-bezier(.2,0,0,1)}
 html{-webkit-text-size-adjust:100%}
 html,body{overflow-x:clip}
-body{background:var(--canvas);color:var(--ink);font:16px/1.6 var(--font-text),sans-serif;-webkit-font-smoothing:antialiased}
+body{background:var(--canvas);color:var(--ink);font:450 17px/1.65 var(--font-text),sans-serif;-webkit-font-smoothing:antialiased}
 .d{font-family:var(--font-display),sans-serif;font-weight:500;letter-spacing:-.02em}
 .h1{font-size:clamp(40px,4.4vw,64px);line-height:1.02;letter-spacing:-.03em}
 .h2{font-size:clamp(32px,3.6vw,48px);line-height:1.06;letter-spacing:-.025em}

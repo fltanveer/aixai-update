@@ -14,7 +14,7 @@ export default function OverviewContent() {
           <span className="text-edge">×</span>
           {" "}Artificial Intelligence
         </h1>
-        <p className="mt-6 max-w-[52ch] text-muted">
+        <p className="mt-6 max-w-[52ch] text-lg font-medium text-muted md:text-xl md:leading-[1.6]">
           AI capabilities and efficiencies are tied directly to computational resources. That relationship preempted ownership. Servers, the power, cooling and space to house them, and the operational support to keep them running relegated AI to cloud services and endless subscriptions.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">

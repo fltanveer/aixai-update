@@ -10,7 +10,8 @@ import "./globals.css";
 
 // Self-hosted at build time: no request to Google at runtime, no layout shift from late fonts.
 const display = Red_Hat_Display({ subsets: ["latin"], weight: ["300", "500", "600"], variable: "--font-display", display: "swap" });
-const text = Red_Hat_Text({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-text", display: "swap" });
+// variable font: any weight between 300 and 700, so body text can sit at 450
+const text = Red_Hat_Text({ subsets: ["latin"], variable: "--font-text", display: "swap" });
 const mono = Red_Hat_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-mono", display: "swap" });
 
 export const metadata: Metadata = {

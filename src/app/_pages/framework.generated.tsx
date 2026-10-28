@@ -8,7 +8,7 @@ export default function FrameworkContent() {
     <>
     <section className="mx-auto grid max-w-page gap-8 px-5 pb-16 pt-14 md:px-8 md:pt-20 lg:grid-cols-12" aria-labelledby="fw-h">
       <h1 id="fw-h" className="d h1 lg:col-span-7">Built from industry standards</h1>
-      <p className="text-lg lg:col-span-4 lg:col-start-9 lg:pt-4">
+      <p className="text-lg font-medium md:text-xl md:leading-[1.6] lg:col-span-4 lg:col-start-9 lg:pt-4">
         AIxAIoT delivers the infrastructure as a specified system — in every domain, and for the edge data center within it. Not a rack in a closet, and not a vendor architecture.
       </p>
     </section>

@@ -14,6 +14,12 @@ export default {
         sans: ["var(--font-text)", "var(--font-display)", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
+      // body text one step larger for readability; spacing (rem) is untouched
+      fontSize: {
+        sm: ["0.9375rem", { lineHeight: "1.45rem" }],
+        base: ["1.0625rem", { lineHeight: "1.75rem" }],
+        lg: ["1.1875rem", { lineHeight: "1.85rem" }],
+      },
       borderRadius: { ctl: "6px", in: "12px", mod: "20px" },
       maxWidth: { page: "1280px" },
     },

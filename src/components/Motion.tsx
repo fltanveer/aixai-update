@@ -61,7 +61,17 @@ export default function Motion() {
       { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
     );
     els.forEach((el) => io.observe(el));
-    return () => { io.disconnect(); els.forEach((el) => el.classList.remove("rv", "rv-media", "rv-in")); };
+    // a fast jump (anchor link, scrollbar drag) can skip a block entirely: anything already above the viewport shows at once
+    let ticking = false;
+    const sweep = () => {
+      ticking = false;
+      els.forEach((el) => {
+        if (!el.classList.contains("rv-in") && el.getBoundingClientRect().bottom < 0) { el.classList.add("rv-in"); io.unobserve(el); }
+      });
+    };
+    const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(sweep); } };
+    addEventListener("scroll", onScroll, { passive: true });
+    return () => { io.disconnect(); removeEventListener("scroll", onScroll); els.forEach((el) => el.classList.remove("rv", "rv-media", "rv-in")); };
   }, [path]);
 
   return null;
