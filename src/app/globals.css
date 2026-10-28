@@ -1,0 +1,199 @@
+@tailwind base;
+
+/* v5 · studio-grade-ui — Signal Ops, light. Ported from aixaiot-v5-studio.html */
+:root{--canvas:#FBFBF8;--surface:#FFFFFE;--s2:#F2F1EC;--line:#E3E1D8;--ink:#17160F;--muted:#5D5B52;--acc:#F2C200;--edge:#7A6000;--ok:#1E7F49;--crit:#C2372C;--ease:cubic-bezier(.2,0,0,1)}
+html{-webkit-text-size-adjust:100%}
+html,body{overflow-x:clip}
+body{background:var(--canvas);color:var(--ink);font:16px/1.6 var(--font-text),sans-serif;-webkit-font-smoothing:antialiased}
+.d{font-family:var(--font-display),sans-serif;font-weight:500;letter-spacing:-.02em}
+.h1{font-size:clamp(40px,4.4vw,64px);line-height:1.02;letter-spacing:-.03em}
+.h2{font-size:clamp(32px,3.6vw,48px);line-height:1.06;letter-spacing:-.025em}
+.h3{font-size:20px;line-height:1.3;letter-spacing:-.01em}
+.kpi{font-family:var(--font-display),sans-serif;font-weight:300;font-size:clamp(40px,4.4vw,56px);line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.mod-t{font-family:var(--font-display),sans-serif;font-weight:500;font-size:14px;line-height:20px;color:var(--muted)}
+.id{font-family:var(--font-mono),monospace;font-weight:500;font-size:.86em;letter-spacing:0;white-space:nowrap}
+h1,h2,h3{text-wrap:balance}p,li,dd,td{text-wrap:pretty}
+.measure{max-width:64ch}
+.grid>*{min-width:0}
+/* modules: hairline depth model */
+.mod{background:var(--surface);border:1px solid var(--line);border-radius:20px}
+.mod-in{background:var(--s2);border-radius:12px}
+.float{box-shadow:0 1px 2px oklch(.35 .04 95/.08),0 8px 16px -6px oklch(.35 .05 95/.12),0 28px 56px -16px oklch(.35 .06 95/.2)}
+/* controls */
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:10px;font:500 15px/20px var(--font-display),sans-serif;padding:12px 18px;transition:background-color .15s var(--ease),transform .12s var(--ease)}
+.btn:active{transform:scale(.97)}
+.btn-acc{background:var(--acc);color:var(--ink)}@media (hover:hover){.btn-acc:hover{background:#E0B300}}
+.btn-ln{box-shadow:inset 0 0 0 1px var(--ink);color:var(--ink)}@media (hover:hover){.btn-ln:hover{background:var(--s2)}}
+.lnk{text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:4px;transition:text-decoration-color .15s var(--ease)}@media (hover:hover){.lnk:hover{text-decoration-color:var(--ink)}}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:6px}
+.nl{position:relative;padding:8px 2px;font-size:14px;color:var(--muted);transition:color .15s var(--ease)}
+@media (hover:hover){.nl:hover{color:var(--ink)}}
+.nl[aria-current=page]{color:var(--ink)}.nl[aria-current=page]::after{content:"";position:absolute;left:0;right:0;bottom:2px;height:2px;background:var(--acc)}
+/* status: colour + shape + label */
+.st{display:inline-flex;align-items:center;gap:8px;font-size:14px}
+.st i{width:8px;height:8px;border-radius:9px;background:var(--ok)}
+.st.crit i{background:var(--crit);border-radius:1px;transform:rotate(45deg)}
+/* legend filter */
+.lg{display:grid;grid-template-columns:18px 1fr;gap:8px;align-items:center;width:100%;text-align:left;padding:5px 8px;font-size:14px;line-height:20px;border-radius:12px;transition:background-color .15s var(--ease),opacity .15s var(--ease)}
+@media (hover:hover){.lg:hover{background:var(--s2)}}
+.lg[aria-pressed=true]{background:#FFF6CC}
+.dim{cursor:pointer}
+.lg svg{margin-top:0}
+/* iso object */
+.dev{transition:opacity .25s var(--ease)}
+.dim .dev{opacity:.06}.dim .dev.hit{opacity:1}
+.dim .run{opacity:.05}.dim .run.hit{opacity:1}
+.run{fill:none;stroke:var(--acc);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:opacity .25s var(--ease)}
+.run.pulse{stroke:#C99A00;stroke-width:2.6}
+.dim .run.pulse:not(.hit){opacity:0}
+/* drawings */
+.sv{fill:none;stroke:var(--ink);stroke-width:1.25;stroke-linejoin:round;stroke-linecap:round}
+.sv-m{stroke:#A3A094}.sv-a{stroke:var(--edge)}.sv-d{stroke-dasharray:4 5}
+.svt{font:12px var(--font-text),sans-serif}.svt:not([fill]){fill:var(--muted)}
+.svb{font:500 14px var(--font-display),sans-serif}.svb:not([fill]){fill:var(--ink)}
+.svm{font:500 12px var(--font-mono),monospace}.svm:not([fill]){fill:var(--ink)}
+img.ph{outline:1px solid oklch(0 0 0/.1);outline-offset:-1px}
+/* stack slabs */
+.slab{cursor:pointer}
+.slab path{transition:fill .2s var(--ease)}
+#menu[hidden]{display:none}
+/* interface joints: a connector rises from each interface to the seam between the parts it joins */
+.iface{position:relative;display:flex;flex-direction:column;align-items:center}
+.iface>div{width:100%}
+.iface::before{content:"";width:2px;height:12px;background:var(--acc);margin:-12px 0 0}
+@media (min-width:1024px){.iface{padding-top:28px}.iface::before{position:absolute;top:-8px;left:50%;height:36px;margin:0;transform:translateX(-50%)}.iface::after{content:"";position:absolute;top:-12px;left:50%;width:10px;height:10px;border-radius:9px;background:var(--acc);box-shadow:0 0 0 3px var(--surface);transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+::selection{background:#FFE680}
+/* rack elevation: blinking status lights, vent slots */
+@keyframes rk-led{0%,100%{opacity:1}50%{opacity:.25}}
+.rk-led{animation:rk-led 1.8s ease-in-out infinite}
+.rk-vent{background:repeating-linear-gradient(90deg,#CFCBBE 0 2px,transparent 2px 7px);border-radius:2px}
+.rk-vent-l{background:repeating-linear-gradient(90deg,rgba(255,255,255,.18) 0 2px,transparent 2px 7px)}
+@media (prefers-reduced-motion:reduce){.rk-led{animation:none}}
+
+/* utilities after the custom rules, as the v5 CDN build had them, so a utility beats a component class */
+@tailwind components;
+@tailwind utilities;
+
+/* ===================== refinements (after utilities, so they win) ===================== */
+
+/* type scale: fluid from phone to desktop */
+.h1{font-size:clamp(38px,1.1rem + 4.2vw,64px);line-height:1.03}
+.h2{font-size:clamp(30px,.95rem + 3vw,48px);line-height:1.08}
+body{line-height:1.65}
+html{scroll-padding-top:84px;text-rendering:optimizeLegibility}
+@media (max-width:639px){
+  main .d.text-2xl{font-size:21px;line-height:1.38}
+  main .d.text-3xl{font-size:25px;line-height:1.24}
+  main .kpi{font-size:44px}
+  /* tighter section rhythm on phones */
+  main section.py-20,main section.py-24{padding-top:64px;padding-bottom:64px}
+}
+
+/* scroll reveals (driven by components/Motion.tsx) */
+.rv{opacity:0;transform:translate3d(0,24px,0)}
+.rv.rv-in{opacity:1;transform:none;transition:opacity .7s cubic-bezier(.2,0,0,1),transform .9s cubic-bezier(.16,1,.3,1)}
+.rv-media{opacity:0;transform:scale(1.045)}
+.rv-media.rv-in{opacity:1;transform:none;transition:opacity .8s ease,transform 1.3s cubic-bezier(.16,1,.3,1)}
+
+/* every page arrives softly */
+@keyframes page-enter{from{opacity:0;transform:translate3d(0,10px,0)}to{opacity:1;transform:none}}
+.page-enter{animation:page-enter .55s cubic-bezier(.2,0,0,1) both}
+
+/* header: hairline shadow once scrolled */
+.hdr{transition:box-shadow .3s var(--ease),border-color .3s var(--ease),background-color .3s var(--ease)}
+.hdr-on{box-shadow:0 10px 30px -18px rgba(23,22,15,.28)}
+
+/* mobile menu: opens with height + staggered links, holds the page still */
+.menu{display:grid;grid-template-rows:0fr;border-top:1px solid transparent;transition:grid-template-rows .45s var(--ease),border-color .3s var(--ease)}
+.menu>div{overflow:hidden;min-height:0}
+.menu.is-open{grid-template-rows:1fr;border-color:var(--line)}
+.menu-link{opacity:0;transform:translate3d(0,-8px,0);transition:opacity .3s var(--ease),transform .45s var(--ease)}
+.menu.is-open .menu-link{opacity:1;transform:none}
+html.menu-open{overflow:hidden}
+.burger-i{position:relative;display:inline-block;width:14px;height:10px}
+.burger-i i{position:absolute;left:0;right:0;height:1.5px;border-radius:2px;background:currentColor;transition:transform .3s var(--ease),top .3s var(--ease)}
+.burger-i i:first-child{top:2px}.burger-i i:last-child{top:7px}
+.burger-i.is-open i{top:4.25px}.burger-i.is-open i:first-child{transform:rotate(45deg)}.burger-i.is-open i:last-child{transform:rotate(-45deg)}
+
+/* controls: a touch more feedback */
+@media (hover:hover){
+  .btn-acc:hover{box-shadow:0 8px 20px -10px rgba(140,110,0,.55)}
+  .btn{will-change:transform}
+  .mod{transition:border-color .25s var(--ease),box-shadow .35s var(--ease)}
+}
+
+/* phone readability for drawings */
+@media (max-width:639px){
+  svg[aria-labelledby="fl5"] .svt{font-size:26px}
+}
+@media (max-width:767px){
+  .cab-tag{transform-box:fill-box;transform-origin:0% 60%;transform:scale(1.5)}
+  /* the domain profile table becomes stacked cards */
+  .rtable,.rtable tbody{display:block}
+  .rtable tr{display:grid;grid-template-columns:auto 1fr;column-gap:14px;align-items:baseline;padding:18px 20px}
+  .rtable th,.rtable td{padding:0!important;width:auto!important}
+  .rtable td:nth-child(n+3){grid-column:1/-1;margin-top:8px}
+}
+
+/* signal line: a dot runs along a section divider, drawing the line in behind it from the left; passes alternate ink and yellow */
+@property --sl{syntax:"<percentage>";inherits:true;initial-value:-5%}
+@property --sc{syntax:"<color>";inherits:true;initial-value:#17160F}
+.signal-line{position:relative;animation:signal-line 13s cubic-bezier(.45,0,.2,1) infinite}
+.signal-line::before{content:"";position:absolute;left:0;right:0;top:-1px;height:1.5px;pointer-events:none;
+  background:linear-gradient(90deg,transparent 0 calc(var(--sl) - 42%),color-mix(in srgb,var(--sc) 18%,transparent) calc(var(--sl) - 26%),var(--sc) var(--sl),transparent var(--sl))}
+.signal-line::after{content:"";position:absolute;top:-.25px;left:var(--sl);width:9px;height:9px;border-radius:50%;pointer-events:none;
+  background:var(--sc);transform:translate(-50%,-50%);box-shadow:0 0 0 3px color-mix(in srgb,var(--sc) 10%,transparent),0 2px 6px rgba(23,22,15,.16)}
+/* the colour changes only while the dot is off screen between passes */
+@keyframes signal-line{
+  0%{--sl:-5%;--sc:#17160F} 39%{--sl:105%;--sc:#17160F} 49.9%{--sl:105%;--sc:#17160F}
+  50%{--sl:-5%;--sc:#E3A900} 89%{--sl:105%;--sc:#E3A900} 99.9%{--sl:105%;--sc:#E3A900} 100%{--sl:-5%;--sc:#17160F}
+}
+@media (prefers-reduced-motion:reduce){.signal-line{animation:none;--sl:28%}}
+
+/* the loop: sensors measure → the inference → actuators act → back. One 4 s clock for every part. */
+.loop{--lt:4s}
+.loop-card{transition:box-shadow .3s var(--ease)}
+.loop-c1{animation:loop-c1 var(--lt) linear infinite}
+.loop-c2{animation:loop-c2 var(--lt) linear infinite}
+.loop-c3{animation:loop-c3 var(--lt) linear infinite}
+@keyframes loop-c1{0%,14%{box-shadow:0 0 0 2px #F2C200;background-color:#FFF6CC}24%,100%{box-shadow:0 0 0 0 transparent;background-color:var(--s2)}}
+@keyframes loop-c2{0%,24%{box-shadow:0 0 0 0 transparent}30%,40%{box-shadow:0 0 0 3px #F2C200}50%,100%{box-shadow:0 0 0 0 transparent}}
+@keyframes loop-c3{0%,58%{box-shadow:0 0 0 0 transparent;background-color:var(--s2)}63%,72%{box-shadow:0 0 0 2px #F2C200;background-color:#FFF6CC}82%,100%{box-shadow:0 0 0 0 transparent;background-color:var(--s2)}}
+.loop-wave{animation:loop-wave var(--lt) ease-out infinite}.loop-wave-2{animation-delay:.12s}
+@keyframes loop-wave{0%{opacity:.15}8%{opacity:1}24%,100%{opacity:.15}}
+.loop-gear{transform-box:fill-box;transform-origin:center;animation:loop-gear var(--lt) linear infinite}
+@keyframes loop-gear{0%,60%{transform:rotate(0)}76%,100%{transform:rotate(240deg)}}
+.loop-conn{position:relative;align-self:center;justify-self:center;width:2px;height:28px;border-radius:2px;background:#E8DFB6}
+.loop-conn::after{content:"";position:absolute;left:50%;width:7px;height:7px;border-radius:50%;background:#E3A900;transform:translate(-50%,-50%);opacity:0}
+.loop-k1::after{animation:loop-k1v var(--lt) cubic-bezier(.45,0,.55,1) infinite}
+.loop-k2::after{animation:loop-k2v var(--lt) cubic-bezier(.45,0,.55,1) infinite}
+@keyframes loop-k1v{0%,12%{top:0;opacity:0}14%{opacity:1}26%{top:100%;opacity:1}28%,100%{top:100%;opacity:0}}
+@keyframes loop-k2v{0%,46%{top:0;opacity:0}48%{opacity:1}60%{top:100%;opacity:1}62%,100%{top:100%;opacity:0}}
+@media (min-width:640px){
+  .loop-conn{width:100%;height:2px}
+  .loop-conn::after{top:50%;left:0}
+  .loop-k1::after{animation-name:loop-k1h}.loop-k2::after{animation-name:loop-k2h}
+  @keyframes loop-k1h{0%,12%{left:0;opacity:0}14%{opacity:1}26%{left:100%;opacity:1}28%,100%{left:100%;opacity:0}}
+  @keyframes loop-k2h{0%,46%{left:0;opacity:0}48%{opacity:1}60%{left:100%;opacity:1}62%,100%{left:100%;opacity:0}}
+  /* the way back: from under "actuators act" to under "Sensors measure" */
+  .loop-return{position:relative;height:22px;margin:0 calc((100% - 80px) / 6);border:1.5px dashed #CFCBBE;border-top:0;border-radius:0 0 14px 14px}
+  .loop-return i{position:absolute;width:7px;height:7px;border-radius:50%;background:#17160F;transform:translate(-50%,-50%);opacity:0;animation:loop-back var(--lt) cubic-bezier(.45,0,.55,1) infinite}
+  @keyframes loop-back{0%,72%{left:100%;top:0;opacity:0}74%{opacity:1}78%{left:100%;top:100%}94%{left:0;top:100%;opacity:1}98%{left:0;top:0;opacity:1}100%{left:0;top:0;opacity:0}}
+}
+@media (prefers-reduced-motion:reduce){.loop *,.loop *::after{animation:none!important}}
+
+/* stack explorer */
+.stack-arrow{display:inline-flex;width:38px;height:38px;align-items:center;justify-content:center;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);transition:background-color .2s var(--ease),opacity .2s}
+.stack-arrow:hover:not(:disabled){background:var(--s2)}.stack-arrow:disabled{opacity:.35;cursor:default}
+@keyframes stack-fade{from{opacity:0;transform:translate3d(0,8px,0)}to{opacity:1;transform:none}}
+.stack-fade{animation:stack-fade .45s cubic-bezier(.2,0,0,1) both}
+.slab{cursor:pointer;outline:none}
+.stack-progress{position:absolute;left:0;bottom:0;height:2px;width:100%;background:#17160F;transform-origin:left;transform:scaleX(0);animation:stack-progress linear forwards}
+@keyframes stack-progress{to{transform:scaleX(1)}}
+
+@media (prefers-reduced-motion:reduce){
+  .rv,.rv-media{opacity:1!important;transform:none!important}
+  .page-enter{animation:none}
+  .menu,.menu-link,.burger-i i,.hdr{transition:none}
+}

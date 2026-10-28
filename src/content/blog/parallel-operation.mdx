@@ -1,0 +1,36 @@
+export const metadata = {
+  title: "Parallel operation",
+  description: "The first question any cloud incumbent will raise is availability: what happens when the network fails.",
+  date: "2026-10-19",
+  tag: "Framework",
+  image: "/assets/img/datacenter.webp",
+  imageAlt: "A small edge data center room with two rows of white cabinets",
+};
+
+## Redundancy inside the node.
+
+Accelerators are specified in pairs. A card failure costs headroom, not service — the workload continues on the survivor while the part is replaced.
+
+## Nodes as peers, not islands.
+
+Because each node runs far below capacity, nodes serve several sites and can carry each other’s. The fleet is N+1 by arithmetic rather than by buying a spare for every location.
+
+## Maintenance in parallel.
+
+Updates, model changes and hardware work are staged on one node while another serves. There is no maintenance window in which the business stops.
+
+## Ride-through on the electrical side.
+
+The UPS covers a transient and provides orderly shutdown on a sustained outage. Generator capacity is an option, not a requirement, because the load is about a kilowatt rather than a data hall.
+
+## Independent of the circuit.
+
+A cut fibre or an ISP incident takes a cloud-dependent operation off the air entirely; here it takes away remote access while the business, the sensing and the control loops keep running on site.
+
+## Failures seen before they become outages.
+
+The operational layer watches the conditions that cause on-premises failures — thermal rise, power anomalies, water, airflow loss — and raises them while there is still time to act.
+
+---
+
+Set against a cloud service, the comparison is not availability percentage against availability percentage. A cloud agreement offers a credit when the service is lost; it does not offer continuity, and the failure domain is somebody else’s and invisible. Here the failure domains are small, local, observable and owned.

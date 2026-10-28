@@ -1,0 +1,26 @@
+export const metadata = {
+  title: "Edge devices close the loop",
+  description: "The basis for AI operations in any domain is the same: edge devices. Sensors measure, actuators act, and the inference between them closes the loop.",
+  date: "2026-10-12",
+  tag: "Framework",
+  image: "/assets/img/sensor.webp",
+  imageAlt: "A small wall-mounted sensor on a single-pair yellow cable",
+};
+
+## What it rests on
+
+Premises infrastructure takes power and cooling, pathways and spaces, cabling, grounding and bonding, physical security — and beneath all of it, a sensing and control layer for environmental, security and visual monitoring. Each of those parts is already governed by a published standard. AIxAIoT is the framework that assembles them into one standards-compliant deployable design.
+
+The basis for AI operations in any domain is the same: edge devices. Sensors measure, actuators act, and the inference between them closes the loop. Every domain already holds that population — lighting, cameras, environmental and electrical sensing, access control, and the equipment particular to the work done there — but installed as separate subsystems rather than as one instrumented layer. Lighting is the clearest case: LED luminaires are addressable, powered over the same cabling, and present in every square metre of every domain, which makes them the densest sensing and actuation grid a building already owns.
+
+## When the sensor delivers unfiltered measurements
+
+> When the sensor delivers unfiltered measurements — not a vendor-conditioned value — the filtering, estimation and control computation reside in the AI, where they are explicit.
+
+The control law is then computational and can be written in closed form: an open mathematical model relating the measured quantities to the actuation they drive, available for inspection, verification and revision.
+
+## That is what AIxAIoT specifies
+
+These operational-edge populations — sensors, cameras, lighting and actuators — are not equally addressed by the existing standards. The cabling that connects them, the power that feeds them, and the pathways and spaces in which they live are addressed by a layered set: `ANSI/TIA-568` for cabling, `ANSI/TIA-569` for pathways and spaces, `IEEE 802.3` for Ethernet at its various physical layers. The application-layer protocols by which they communicate — BACnet, DALI, OSDP, OPC UA, IETF — are addressed by others.
+
+The architectural framework that integrates all of these into a coherent operational-intelligence layer is addressed by none of them. That is what AIxAIoT specifies.

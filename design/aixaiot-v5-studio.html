@@ -1,0 +1,948 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AIxAIoT — Edge AI Infrastructure | SenTekse LLC</title>
+<meta name="description" content="AIxAIoT specifies the standards-based infrastructure they run on, including turnkey edge data centers.">
+<meta property="og:title" content="AIxAIoT — Autonomous Infrastructure × Artificial Intelligence">
+<meta property="og:image" content="assets/img/cabinet.webp">
+<meta name="theme-color" content="#FBFBF8">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2317160F'/%3E%3Cpath d='M10 10l12 12M22 10L10 22' stroke='%23F2C200' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<!--
+  v5 · studio-grade-ui — direction: Signal Ops (Rondesignlab), light
+  accent: ANSI/TIA-606 colour code yellow (auxiliary circuits: alarms, security, energy management) = the AI OT layer
+  type: Red Hat Display (display, KPI numerals 300, tnum) · Red Hat Text (body) · Red Hat Mono (standard IDs only)
+  signature: isometric premises object; legend = AI OT column, doubles as a filter
+  copy: verbatim from aixaiot-prototype-v1.0.html
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@300;500;600&family=Red+Hat+Text:wght@400;500&family=Red+Hat+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>
+tailwind.config={theme:{extend:{colors:{canvas:'#FBFBF8',surface:'#FFFFFE',s2:'#F2F1EC',line:'#E3E1D8',ink:'#17160F',muted:'#5D5B52',acc:'#F2C200',edge:'#8C6E00',ok:'#1E7F49',crit:'#C2372C'},fontFamily:{display:['"Red Hat Display"','sans-serif'],sans:['"Red Hat Text"','"Red Hat Display"','sans-serif'],mono:['"Red Hat Mono"','ui-monospace','monospace']},borderRadius:{ctl:'6px',in:'12px',mod:'20px'},maxWidth:{page:'1280px'}}}}
+</script>
+<style>
+:root{--canvas:#FBFBF8;--surface:#FFFFFE;--s2:#F2F1EC;--line:#E3E1D8;--ink:#17160F;--muted:#5D5B52;--acc:#F2C200;--edge:#8C6E00;--ok:#1E7F49;--crit:#C2372C;--ease:cubic-bezier(.2,0,0,1)}
+html{-webkit-text-size-adjust:100%}
+html,body{overflow-x:clip}
+body{background:var(--canvas);color:var(--ink);font:16px/1.6 "Red Hat Text",sans-serif;-webkit-font-smoothing:antialiased}
+.d{font-family:"Red Hat Display",sans-serif;font-weight:500;letter-spacing:-.02em}
+.h1{font-size:clamp(40px,4.4vw,64px);line-height:1.02;letter-spacing:-.03em}
+.h2{font-size:clamp(32px,3.6vw,48px);line-height:1.06;letter-spacing:-.025em}
+.h3{font-size:20px;line-height:1.3;letter-spacing:-.01em}
+.kpi{font-family:"Red Hat Display",sans-serif;font-weight:300;font-size:clamp(40px,4.4vw,56px);line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.mod-t{font-family:"Red Hat Display",sans-serif;font-weight:500;font-size:14px;line-height:20px;color:var(--muted)}
+.id{font-family:"Red Hat Mono",monospace;font-weight:500;font-size:.86em;letter-spacing:0;white-space:nowrap}
+h1,h2,h3{text-wrap:balance}p,li,dd,td{text-wrap:pretty}
+.measure{max-width:64ch}
+.grid>*{min-width:0}
+.page{display:none}.page.on{display:block}
+/* modules: hairline depth model */
+.mod{background:var(--surface);border:1px solid var(--line);border-radius:20px}
+.mod-in{background:var(--s2);border-radius:12px}
+.float{box-shadow:0 1px 2px oklch(.35 .04 95/.08),0 8px 16px -6px oklch(.35 .05 95/.12),0 28px 56px -16px oklch(.35 .06 95/.2)}
+/* controls */
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:10px;font:500 15px/20px "Red Hat Display",sans-serif;padding:12px 18px;transition:background-color .15s var(--ease),transform .12s var(--ease)}
+.btn:active{transform:scale(.97)}
+.btn-acc{background:var(--acc);color:var(--ink)}@media (hover:hover){.btn-acc:hover{background:#E0B300}}
+.btn-ln{box-shadow:inset 0 0 0 1px var(--ink);color:var(--ink)}@media (hover:hover){.btn-ln:hover{background:var(--s2)}}
+.lnk{text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:4px;transition:text-decoration-color .15s var(--ease)}@media (hover:hover){.lnk:hover{text-decoration-color:var(--ink)}}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:6px}
+.nl{position:relative;padding:8px 2px;font-size:14px;color:var(--muted);transition:color .15s var(--ease)}
+@media (hover:hover){.nl:hover{color:var(--ink)}}
+.nl[aria-current=page]{color:var(--ink)}.nl[aria-current=page]::after{content:"";position:absolute;left:0;right:0;bottom:2px;height:2px;background:var(--acc)}
+/* status: colour + shape + label */
+.st{display:inline-flex;align-items:center;gap:8px;font-size:14px}
+.st i{width:8px;height:8px;border-radius:9px;background:var(--ok)}
+.st.crit i{background:var(--crit);border-radius:1px;transform:rotate(45deg)}
+/* legend filter */
+.lg{display:grid;grid-template-columns:18px 1fr;gap:8px;align-items:center;width:100%;text-align:left;padding:5px 8px;font-size:14px;line-height:20px;border-radius:12px;transition:background-color .15s var(--ease),opacity .15s var(--ease)}
+@media (hover:hover){.lg:hover{background:var(--s2)}}
+.lg[aria-pressed=true]{background:#FFF6CC}
+.dim{cursor:pointer}
+.lg svg{margin-top:0}
+/* iso object */
+.dev{transition:opacity .25s var(--ease)}
+.dim .dev{opacity:.06}.dim .dev.hit{opacity:1}
+.dim .run{opacity:.05}.dim .run.hit{opacity:1}
+.run{fill:none;stroke:var(--acc);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:opacity .25s var(--ease)}
+.run.pulse{stroke:#C99A00;stroke-width:2.6}
+.dim .run.pulse:not(.hit){opacity:0}
+/* drawings */
+.sv{fill:none;stroke:var(--ink);stroke-width:1.25;stroke-linejoin:round;stroke-linecap:round}
+.sv-m{stroke:#A3A094}.sv-a{stroke:var(--edge)}.sv-d{stroke-dasharray:4 5}
+.svt{font:12px "Red Hat Text",sans-serif}.svt:not([fill]){fill:var(--muted)}
+.svb{font:500 14px "Red Hat Display",sans-serif}.svb:not([fill]){fill:var(--ink)}
+.svm{font:500 12px "Red Hat Mono",monospace}.svm:not([fill]){fill:var(--ink)}
+img.ph{outline:1px solid oklch(0 0 0/.1);outline-offset:-1px}
+/* stack slabs */
+.slab{cursor:pointer}
+.slab path{transition:fill .2s var(--ease)}
+#menu[hidden]{display:none}
+/* interface joints: a connector rises from each interface to the seam between the parts it joins */
+.iface{position:relative;display:flex;flex-direction:column;align-items:center}
+.iface>div{width:100%}
+.iface::before{content:"";width:2px;height:12px;background:var(--acc);margin:-12px 0 0}
+@media (min-width:1024px){.iface{padding-top:28px}.iface::before{position:absolute;top:-8px;left:50%;height:36px;margin:0;transform:translateX(-50%)}.iface::after{content:"";position:absolute;top:-12px;left:50%;width:10px;height:10px;border-radius:9px;background:var(--acc);box-shadow:0 0 0 3px var(--surface);transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+::selection{background:#FFE680}
+/* rack elevation: blinking status lights, vent slots */
+@keyframes rk-led{0%,100%{opacity:1}50%{opacity:.25}}
+.rk-led{animation:rk-led 1.8s ease-in-out infinite}
+.rk-vent{background:repeating-linear-gradient(90deg,#CFCBBE 0 2px,transparent 2px 7px);border-radius:2px}
+.rk-vent-l{background:repeating-linear-gradient(90deg,rgba(255,255,255,.18) 0 2px,transparent 2px 7px)}
+@media (prefers-reduced-motion:reduce){.rk-led{animation:none}}
+</style>
+</head>
+<body>
+<a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-ctl focus:bg-ink focus:px-4 focus:py-2 focus:text-canvas">Overview</a>
+
+<header class="sticky top-0 z-50 border-b border-line bg-canvas/90 backdrop-blur">
+  <nav class="mx-auto flex h-16 max-w-page items-center gap-8 px-5 md:px-8" aria-label="Primary">
+    <a href="#overview" class="d mr-auto flex items-center gap-2 text-xl" aria-label="AIxAIoT home">
+      <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><rect width="22" height="22" rx="5" fill="#17160F"/><path d="M7 7l8 8M15 7l-8 8" stroke="#F2C200" stroke-width="2.2" stroke-linecap="round"/></svg>
+      <span>AI<span class="text-edge">×</span>AIoT</span>
+    </a>
+    <div class="hidden items-center gap-7 md:flex">
+      <a class="nl" href="#overview" data-nav="overview">Overview</a>
+      <a class="nl" href="#framework" data-nav="framework">Framework</a>
+      <a class="nl" href="#domains" data-nav="domains">Domains</a>
+      <a class="nl" href="#examples" data-nav="examples">Examples</a>
+    </div>
+    <a href="#method" class="btn btn-acc hidden !py-2 md:inline-flex">Intake</a>
+    <button class="burger btn btn-ln !px-3 !py-2 md:hidden" aria-expanded="false" aria-controls="menu">Overview</button>
+  </nav>
+  <div id="menu" hidden class="border-t border-line bg-canvas px-5 pb-6 md:hidden">
+    <a class="d block border-b border-line py-4 text-2xl" href="#overview">Overview</a>
+    <a class="d block border-b border-line py-4 text-2xl" href="#framework">Framework</a>
+    <a class="d block border-b border-line py-4 text-2xl" href="#domains">Domains</a>
+    <a class="d block border-b border-line py-4 text-2xl" href="#examples">Examples</a>
+    <a class="btn btn-acc mt-6" href="#method">Intake</a>
+  </div>
+</header>
+
+<main id="main">
+<!-- ================= OVERVIEW ================= -->
+<div class="page" data-page="overview">
+  <section class="mx-auto grid max-w-page gap-10 px-5 pb-16 pt-14 md:px-8 md:pt-20 lg:grid-cols-12 lg:gap-8" aria-labelledby="ov-h">
+    <div class="lg:col-span-5 lg:pt-6">
+      <p class="mod-t">Edge AI Infrastructure</p>
+      <h1 id="ov-h" class="d h1 mt-4">Autonomous Infrastructure <span class="text-edge">×</span> Artificial Intelligence</h1>
+      <p class="mt-6 max-w-[52ch] text-muted">AI capabilities and efficiencies are tied directly to computational resources. That relationship preempted ownership. Servers, the power, cooling and space to house them, and the operational support to keep them running relegated AI to cloud services and endless subscriptions.</p>
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="#examples" class="btn btn-acc">Pay for what you need</a>
+        <a href="#framework" class="btn btn-ln">The Framework</a>
+      </div>
+    </div>
+
+    <!-- signature: premises object -->
+    <figure class="relative lg:col-span-7" aria-labelledby="iso-cap">
+      <div class="mod relative overflow-hidden">
+        <svg id="premises" class="block w-full" viewBox="0 0 760 540" role="img" aria-labelledby="iso-t">
+          <title id="iso-t">Isometric premises: one locked cabinet in a back-of-house IT closet, with room sensors, power, cooling, cameras, access control, fire and energy devices and machines distributed through the building and wired back to it.</title>
+        </svg>
+        <!-- legend = AI OT column, doubles as a filter -->
+        <div class="float m-3 rounded-in border border-line bg-surface p-1.5 xl:absolute xl:bottom-4 xl:left-4 xl:m-0 xl:w-[316px]">
+          <p class="px-2 pb-1 pt-1 text-xs font-medium text-muted">AI OT — runs the infrastructure</p>
+          <div id="legend" class="grid grid-cols-2 gap-0.5" role="group" aria-label="AI OT">
+            <button class="lg" data-k="" aria-pressed="true"><svg width="16" height="16" aria-hidden="true"><rect x="2.5" y="2.5" width="4.5" height="4.5" rx="1" class="sv"/><rect x="9" y="2.5" width="4.5" height="4.5" rx="1" class="sv"/><rect x="2.5" y="9" width="4.5" height="4.5" rx="1" class="sv"/><rect x="9" y="9" width="4.5" height="4.5" rx="1" class="sv"/></svg><span><b class="font-medium">AI OT</b></span></button>
+            <button class="lg" data-k="room" aria-pressed="false"><svg width="16" height="16" aria-hidden="true"><circle cx="8" cy="8" r="5" class="sv"/></svg><span><b class="font-medium">Room sensors</b></span></button>
+            <button class="lg" data-k="power" aria-pressed="false"><svg width="16" height="16" aria-hidden="true"><rect x="3" y="4" width="10" height="8" rx="1" class="sv"/></svg><span><b class="font-medium">Power</b></span></button>
+            <button class="lg" data-k="cool" aria-pressed="false"><svg width="16" height="16" aria-hidden="true"><circle cx="8" cy="8" r="5.5" class="sv"/><path d="M8 3v10M3 8h10" class="sv"/></svg><span><b class="font-medium">Cooling</b></span></button>
+            <button class="lg" data-k="cam" aria-pressed="false"><svg width="16" height="16" aria-hidden="true"><path d="M3 4h10L8 12z" class="sv"/></svg><span><b class="font-medium">Cameras</b></span></button>
+            <button class="lg" data-k="access" aria-pressed="false"><svg width="16" height="16" aria-hidden="true"><rect x="4" y="2" width="8" height="12" class="sv"/><circle cx="10" cy="8" r="1" fill="#17160F"/></svg><span><b class="font-medium">Access control</b></span></button>
+            <button class="lg" data-k="fire" aria-pressed="false"><svg width="16" height="16" aria-hidden="true"><path d="M8 2.5l5 2.9v5.2l-5 2.9-5-2.9V5.4z" class="sv"/></svg><span><b class="font-medium">Fire and energy</b></span></button>
+            <button class="lg" data-k="mach" aria-pressed="false"><svg width="16" height="16" aria-hidden="true"><path d="M8 2l5.5 3v6L8 14l-5.5-3V5z M8 8l5.5-3M8 8v6M8 8L2.5 5" class="sv"/></svg><span><b class="font-medium">Machines</b></span></button>
+          </div>
+        </div>
+      </div>
+      <figcaption id="iso-cap" class="mt-3 max-w-xl text-sm text-muted">The operational layer spans both, because the sensors and actuators the AI acts on are distributed through the premises, not confined to the cabinet.</figcaption>
+    </figure>
+  </section>
+
+  <section class="signal-line border-t border-line py-16 md:py-20" aria-label="Edge AI Infrastructure">
+    <p class="d mx-auto max-w-page px-5 text-2xl leading-snug md:px-8 md:text-[32px] md:leading-[1.3]">That constraint has lifted. Ownership is now in reach for the first time: inference accelerators are purpose-built and inexpensive, and the models have been compressed to run on them. Sized from what a business actually does, the workloads that run the business and the operational intelligence that runs the facility together come to a few servers in one room, on commercial and manufacturing premises. AIxAIoT specifies the standards-based infrastructure they run on, including turnkey edge data centers.</p>
+  </section>
+
+  <!-- shift -->
+  <section class="border-t border-line bg-surface py-20 md:py-28" aria-labelledby="sh-h">
+    <div class="mx-auto grid max-w-page gap-10 px-5 md:px-8 lg:grid-cols-12">
+      <div class="lg:col-span-4">
+        <h2 id="sh-h" class="d h2">Get off their cloud</h2>
+        <p class="mt-5 text-lg">Today, AI is subscribed, not owned. That is no longer where the economics or the risks point.</p>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2 lg:col-span-8">
+        <article class="mod p-5">
+          <p class="d inline-flex items-center gap-2 rounded-full border border-[#D6D3C7] bg-s2 px-3.5 py-1.5 text-[17px] leading-none text-ink"><span class="h-2.5 w-2.5 rounded-full border-2 border-[#A3A094]" aria-hidden="true"></span>subscribed</p>
+          <svg id="rt-sub" viewBox="0 0 320 232" class="mt-3 w-full" role="img" aria-labelledby="rt1"><title id="rt1">The decision travels off site and back: round-trip delays.</title>
+            <polygon points="271.8,170.0 274.6,172.1 276.4,174.6 277.0,177.2 276.4,179.8 274.6,182.3 271.8,184.4 213.6,218.0 210.0,219.6 205.7,220.6 201.1,221.0 196.6,220.6 192.3,219.6 188.7,218.0 47.3,136.4 44.5,134.3 42.8,131.8 42.2,129.2 42.8,126.6 44.5,124.1 47.3,122.0 105.5,88.4 109.2,86.8 113.4,85.8 118.0,85.4 122.6,85.8 126.8,86.8 130.5,88.4" fill="#E9E7DF" stroke="#17160F" stroke-width="1" stroke-linejoin="round"/><line x1="42.2" y1="122.0" x2="42.2" y2="129.2" stroke="#17160F" stroke-width="1"/><line x1="277.0" y1="170.0" x2="277.0" y2="177.2" stroke="#17160F" stroke-width="1"/><polygon points="271.8,162.8 274.6,164.9 276.4,167.4 277.0,170.0 276.4,172.6 274.6,175.1 271.8,177.2 213.6,210.8 210.0,212.4 205.7,213.4 201.1,213.8 196.6,213.4 192.3,212.4 188.7,210.8 47.3,129.2 44.5,127.1 42.8,124.6 42.2,122.0 42.8,119.4 44.5,116.9 47.3,114.8 105.5,81.2 109.2,79.6 113.4,78.6 118.0,78.2 122.6,78.6 126.8,79.6 130.5,81.2" fill="#FFFFFE" stroke="#17160F" stroke-width="1" stroke-linejoin="round"/><line x1="138.8" y1="86.0" x2="55.6" y2="134.0" stroke="#ECEAE2" stroke-width="1"/><line x1="159.6" y1="98.0" x2="76.4" y2="146.0" stroke="#ECEAE2" stroke-width="1"/><line x1="180.4" y1="110.0" x2="97.2" y2="158.0" stroke="#ECEAE2" stroke-width="1"/><line x1="201.1" y1="122.0" x2="118.0" y2="170.0" stroke="#ECEAE2" stroke-width="1"/><line x1="221.9" y1="134.0" x2="138.8" y2="182.0" stroke="#ECEAE2" stroke-width="1"/><line x1="242.7" y1="146.0" x2="159.6" y2="194.0" stroke="#ECEAE2" stroke-width="1"/><line x1="263.5" y1="158.0" x2="180.4" y2="206.0" stroke="#ECEAE2" stroke-width="1"/><line x1="97.2" y1="86.0" x2="263.5" y2="182.0" stroke="#ECEAE2" stroke-width="1"/><line x1="76.4" y1="98.0" x2="242.7" y2="194.0" stroke="#ECEAE2" stroke-width="1"/><line x1="55.6" y1="110.0" x2="221.9" y2="206.0" stroke="#ECEAE2" stroke-width="1"/><polygon points="105.5,81.2 47.3,114.8 47.3,88.4 105.5,54.8" fill="#E9E7DF" stroke="none" stroke-width="1" stroke-linejoin="round"/><polygon points="130.5,81.2 271.8,162.8 271.8,136.4 130.5,54.8" fill="#F2F1EC" stroke="none" stroke-width="1" stroke-linejoin="round"/><polygon points="105.5,81.2 109.2,79.6 109.2,53.2 105.5,54.8" fill="#EEECE6" stroke="#EEECE6" stroke-width="0.6" stroke-linejoin="round"/><polygon points="109.2,79.6 113.4,78.6 113.4,52.2 109.2,53.2" fill="#EEECE6" stroke="#EEECE6" stroke-width="0.6" stroke-linejoin="round"/><polygon points="113.4,78.6 118.0,78.2 118.0,51.8 113.4,52.2" fill="#EEECE6" stroke="#EEECE6" stroke-width="0.6" stroke-linejoin="round"/><polygon points="118.0,78.2 122.6,78.6 122.6,52.2 118.0,51.8" fill="#EEECE6" stroke="#EEECE6" stroke-width="0.6" stroke-linejoin="round"/><polygon points="122.6,78.6 126.8,79.6 126.8,53.2 122.6,52.2" fill="#EEECE6" stroke="#EEECE6" stroke-width="0.6" stroke-linejoin="round"/><polygon points="126.8,79.6 130.5,81.2 130.5,54.8 126.8,53.2" fill="#EEECE6" stroke="#EEECE6" stroke-width="0.6" stroke-linejoin="round"/><polygon points="47.3,114.8 105.5,81.2 109.2,79.6 113.4,78.6 118.0,78.2 122.6,78.6 126.8,79.6 130.5,81.2 271.8,162.8 271.8,136.4 130.5,54.8 126.8,53.2 122.6,52.2 118.0,51.8 113.4,52.2 109.2,53.2 105.5,54.8 47.3,88.4" fill="none" stroke="#17160F" stroke-width="1" stroke-linejoin="round"/><polygon points="274.3,161.4 271.8,162.8 271.8,136.4 274.3,135.0" fill="#FFFFFE" stroke="#17160F" stroke-width="1" stroke-linejoin="round"/><polygon points="44.8,113.4 47.3,114.8 47.3,88.4 44.8,87.0" fill="#FFFFFE" stroke="#17160F" stroke-width="1" stroke-linejoin="round"/><polygon points="47.3,88.4 105.5,54.8 109.2,53.2 113.4,52.2 118.0,51.8 122.6,52.2 126.8,53.2 130.5,54.8 271.8,136.4 274.3,135.0 133.0,53.4 128.6,51.4 123.5,50.2 118.0,49.8 112.5,50.2 107.4,51.4 103.0,53.4 44.8,87.0" fill="#FFFFFE" stroke="#17160F" stroke-width="1" stroke-linejoin="round"/><circle cx="57.7" cy="93.9" r="6" fill="#FFFFFE" stroke="#17160F" stroke-width="1.25"/><polygon points="221.9,59.6 253.1,77.6 253.1,69.9 221.9,51.9" fill="#E3E1D8" stroke="#A3A094" stroke-width="0.9" stroke-linejoin="round"/><polygon points="273.9,65.6 253.1,77.6 253.1,69.9 273.9,57.9" fill="#FFFFFE" stroke="#A3A094" stroke-width="0.9" stroke-linejoin="round"/><polygon points="242.7,39.9 273.9,57.9 253.1,69.9 221.9,51.9" fill="#F2F1EC" stroke="#A3A094" stroke-width="0.9" stroke-linejoin="round"/><polygon points="221.9,49.5 253.1,67.5 253.1,59.8 221.9,41.8" fill="#E3E1D8" stroke="#A3A094" stroke-width="0.9" stroke-linejoin="round"/><polygon points="273.9,55.5 253.1,67.5 253.1,59.8 273.9,47.8" fill="#FFFFFE" stroke="#A3A094" stroke-width="0.9" stroke-linejoin="round"/><polygon points="242.7,29.8 273.9,47.8 253.1,59.8 221.9,41.8" fill="#F2F1EC" stroke="#A3A094" stroke-width="0.9" stroke-linejoin="round"/><polygon points="242.7,29.8 273.9,47.8 253.1,59.8 221.9,41.8" fill="#FFF6CC" stroke="none" stroke-width="1" stroke-linejoin="round" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.38;.42;.58;.62;1" dur="4s" repeatCount="indefinite"/></polygon><rect x="218.3" y="6.8" width="92.0" height="24" rx="12" fill="#FFFFFE" stroke="#A3A094" stroke-width="1"/><text x="264.3" y="23.0" text-anchor="middle" class="svt" style="fill:#5D5B52">their cloud</text><path id="rt-sub-path" d="M57.7 87.9 C 57.7 23.9, 167.5 74.6, 229.5 70.6 L245.5 70.6 C 277.5 76.6, 196.7 115.6, 190.7 153.6" fill="none" stroke="#17160F" stroke-width="1.1" stroke-dasharray="2.5 4.5" stroke-linecap="round" opacity=".7"/><polygon points="167.9,174.8 192.8,189.2 192.8,168.8 167.9,154.4" fill="#E3E1D8" stroke="#17160F" stroke-width="0.9" stroke-linejoin="round"/><polygon points="213.6,177.2 192.8,189.2 192.8,168.8 213.6,156.8" fill="#FFFFFE" stroke="#17160F" stroke-width="0.9" stroke-linejoin="round"/><polygon points="188.7,142.4 213.6,156.8 192.8,168.8 167.9,154.4" fill="#F2F1EC" stroke="#17160F" stroke-width="0.9" stroke-linejoin="round"/><polygon points="188.7,142.4 213.6,156.8 192.8,168.8 167.9,154.4" fill="#FFF6CC" stroke="#17160F" stroke-width="0.9" stroke-linejoin="round" opacity="0"><animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;0.94;0.980;0.999;1" dur="4s" repeatCount="indefinite"/></polygon><circle r="2.4" fill="#5D5B52" opacity=".25"><animateMotion dur="4s" begin="-3.86s" repeatCount="indefinite" calcMode="linear" keyPoints="0;.46;.54;1" keyTimes="0;.38;.62;.94"><mpath href="#rt-sub-path"/></animateMotion><animate attributeName="opacity" values=".25;.25;0;0" keyTimes="0;.94;.95;1" dur="4s" repeatCount="indefinite"/></circle><circle r="3" fill="#5D5B52" opacity=".5"><animateMotion dur="4s" begin="-3.93s" repeatCount="indefinite" calcMode="linear" keyPoints="0;.46;.54;1" keyTimes="0;.38;.62;.94"><mpath href="#rt-sub-path"/></animateMotion><animate attributeName="opacity" values=".5;.5;0;0" keyTimes="0;.94;.95;1" dur="4s" repeatCount="indefinite"/></circle><circle r="4" fill="#5D5B52" opacity="1"><animateMotion dur="4s" repeatCount="indefinite" calcMode="linear" keyPoints="0;.46;.54;1" keyTimes="0;.38;.62;.94"><mpath href="#rt-sub-path"/></animateMotion><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;.94;.95;1" dur="4s" repeatCount="indefinite"/></circle><ellipse cx="190.7" cy="155.6" rx="0" ry="0" fill="none" stroke="#17160F" stroke-width="1.3" opacity="0"><animate attributeName="rx" values="0;0;18;18" keyTimes="0;0.94;0.999;1" dur="4s" repeatCount="indefinite"/><animate attributeName="ry" values="0;0;9;9" keyTimes="0;0.94;0.999;1" dur="4s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.9;0;0" keyTimes="0;0.94;0.999;1" dur="4s" repeatCount="indefinite"/></ellipse>
+          </svg>
+          <p class="d mt-3 text-2xl">round-trip delays</p>
+        </article>
+        <article class="mod border-ink bg-[#FFFBEA] p-5">
+          <p class="d inline-flex items-center gap-2 rounded-full border border-acc bg-acc px-3.5 py-1.5 text-[17px] leading-none text-ink"><span class="h-2.5 w-2.5 rounded-full bg-ink" aria-hidden="true"></span>owned</p>
+          <svg id="rt-own" viewBox="0 0 320 232" class="mt-3 w-full" role="img" aria-labelledby="rt2"><title id="rt2">The decision closes inside one room: milliseconds.</title>
+            <polygon points="271.8,170.0 274.6,172.1 276.4,174.6 277.0,177.2 276.4,179.8 274.6,182.3 271.8,184.4 213.6,218.0 210.0,219.6 205.7,220.6 201.1,221.0 196.6,220.6 192.3,219.6 188.7,218.0 47.3,136.4 44.5,134.3 42.8,131.8 42.2,129.2 42.8,126.6 44.5,124.1 47.3,122.0 105.5,88.4 109.2,86.8 113.4,85.8 118.0,85.4 122.6,85.8 126.8,86.8 130.5,88.4" fill="#E9E7DF" stroke="#17160F" stroke-width="1" stroke-linejoin="round"/><line x1="42.2" y1="122.0" x2="42.2" y2="129.2" stroke="#17160F" stroke-width="1"/><line x1="277.0" y1="170.0" x2="277.0" y2="177.2" stroke="#17160F" stroke-width="1"/><polygon points="271.8,162.8 274.6,164.9 276.4,167.4 277.0,170.0 276.4,172.6 274.6,175.1 271.8,177.2 213.6,210.8 210.0,212.4 205.7,213.4 201.1,213.8 196.6,213.4 192.3,212.4 188.7,210.8 47.3,129.2 44.5,127.1 42.8,124.6 42.2,122.0 42.8,119.4 44.5,116.9 47.3,114.8 105.5,81.2 109.2,79.6 113.4,78.6 118.0,78.2 122.6,78.6 126.8,79.6 130.5,81.2" fill="#FFFFFE" stroke="#17160F" stroke-width="1" stroke-linejoin="round"/><line x1="138.8" y1="86.0" x2="55.6" y2="134.0" stroke="#ECEAE2" stroke-width="1"/><line x1="159.6" y1="98.0" x2="76.4" y2="146.0" stroke="#ECEAE2" stroke-width="1"/><line x1="180.4" y1="110.0" x2="97.2" y2="158.0" stroke="#ECEAE2" stroke-width="1"/><line x1="201.1" y1="122.0" x2="118.0" y2="170.0" stroke="#ECEAE2" stroke-width="1"/><line x1="221.9" y1="134.0" x2="138.8" y2="182.0" stroke="#ECEAE2" stroke-width="1"/><line x1="242.7" y1="146.0" x2="159.6" y2="194.0" stroke="#ECEAE2" stroke-width="1"/><line x1="263.5" y1="158.0" x2="180.4" y2="206.0" stroke="#ECEAE2" stroke-width="1"/><line x1="97.2" y1="86.0" x2="263.5" y2="182.0" stroke="#ECEAE2" stroke-width="1"/><line x1="76.4" y1="98.0" x2="242.7" y2="194.0" stroke="#ECEAE2" stroke-width="1"/><line x1="55.6" y1="110.0" x2="221.9" y2="206.0" stroke="#ECEAE2" stroke-width="1"/><polygon points="105.5,81.2 47.3,114.8 47.3,88.4 105.5,54.8" fill="#E9E7DF" stroke="none" stroke-width="1" stroke-linejoin="round"/><polygon points="130.5,81.2 271.8,162.8 271.8,136.4 130.5,54.8" fill="#F2F1EC" stroke="none" stroke-width="1" stroke-linejoin="round"/><polygon points="105.5,81.2 109.2,79.6 109.2,53.2 105.5,54.8" fill="#EEECE6" stroke="#EEECE6" stroke-width="0.6" stroke-linejoin="round"/><polygon points="109.2,79.6 113.4,78.6 113.4,52.2 109.2,53.2" fill="#EEECE6" stroke="#EEECE6" stroke-width="0.6" stroke-linejoin="round"/><polygon points="113.4,78.6 118.0,78.2 118.0,51.8 113.4,52.2" fill="#EEECE6" stroke="#EEECE6" stroke-width="0.6" stroke-linejoin="round"/><polygon points="118.0,78.2 122.6,78.6 122.6,52.2 118.0,51.8" fill="#EEECE6" stroke="#EEECE6" stroke-width="0.6" stroke-linejoin="round"/><polygon points="122.6,78.6 126.8,79.6 126.8,53.2 122.6,52.2" fill="#EEECE6" stroke="#EEECE6" stroke-width="0.6" stroke-linejoin="round"/><polygon points="126.8,79.6 130.5,81.2 130.5,54.8 126.8,53.2" fill="#EEECE6" stroke="#EEECE6" stroke-width="0.6" stroke-linejoin="round"/><polygon points="47.3,114.8 105.5,81.2 109.2,79.6 113.4,78.6 118.0,78.2 122.6,78.6 126.8,79.6 130.5,81.2 271.8,162.8 271.8,136.4 130.5,54.8 126.8,53.2 122.6,52.2 118.0,51.8 113.4,52.2 109.2,53.2 105.5,54.8 47.3,88.4" fill="none" stroke="#17160F" stroke-width="1" stroke-linejoin="round"/><polygon points="274.3,161.4 271.8,162.8 271.8,136.4 274.3,135.0" fill="#FFFFFE" stroke="#17160F" stroke-width="1" stroke-linejoin="round"/><polygon points="44.8,113.4 47.3,114.8 47.3,88.4 44.8,87.0" fill="#FFFFFE" stroke="#17160F" stroke-width="1" stroke-linejoin="round"/><polygon points="47.3,88.4 105.5,54.8 109.2,53.2 113.4,52.2 118.0,51.8 122.6,52.2 126.8,53.2 130.5,54.8 271.8,136.4 274.3,135.0 133.0,53.4 128.6,51.4 123.5,50.2 118.0,49.8 112.5,50.2 107.4,51.4 103.0,53.4 44.8,87.0" fill="#FFFFFE" stroke="#17160F" stroke-width="1" stroke-linejoin="round"/><path d="M57.7 96.3 L57.7 108.8 L77.5 120.2 L106.6 103.4" fill="none" stroke="#F2C200" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M128.4 104.0 L221.9 158.0 L201.1 170.0" fill="none" stroke="#F2C200" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path id="rt-own-path" d="M57.7 96.3 L57.7 108.8 L77.5 120.2 L106.6 103.4 L128.4 104.0 L221.9 158.0 L201.1 170.0" fill="none" stroke="none"/><circle cx="57.7" cy="93.9" r="6" fill="#FFFFFE" stroke="#17160F" stroke-width="1.25"/><circle r="3.4" fill="#C99A00"><animateMotion dur="1s" repeatCount="indefinite" calcMode="linear" keyPoints="0;.36;.44;1" keyTimes="0;.3;.48;.86"><mpath href="#rt-own-path"/></animateMotion><animate attributeName="opacity" values="1;1;0;0;1;1;0;0" keyTimes="0;.3;.31;.47;.48;.86;.87;1" dur="1s" repeatCount="indefinite"/></circle><polygon points="98.3,98.6 118.0,110.0 118.0,68.0 98.3,56.6" fill="#3A5A9C" stroke="#17160F" stroke-width="0.9" stroke-linejoin="round"/><polygon points="137.7,98.6 118.0,110.0 118.0,68.0 137.7,56.6" fill="#6A8BCB" stroke="#17160F" stroke-width="0.9" stroke-linejoin="round"/><polygon points="118.0,45.2 137.7,56.6 118.0,68.0 98.3,56.6" fill="#5577BC" stroke="#17160F" stroke-width="0.9" stroke-linejoin="round"/><line x1="98.3" y1="56.6" x2="118.0" y2="68.0" stroke="#F2C200" stroke-width="3" stroke-linecap="round"/><polygon points="118.0,45.2 137.7,56.6 118.0,68.0 98.3,56.6" fill="#F2C200" stroke="#17160F" stroke-width="0.9" stroke-linejoin="round" opacity="0"><animate attributeName="opacity" values="0;0;.9;0;0" keyTimes="0;.3;.36;.48;1" dur="1s" repeatCount="indefinite"/></polygon><polygon points="167.9,174.8 192.8,189.2 192.8,168.8 167.9,154.4" fill="#E3E1D8" stroke="#17160F" stroke-width="0.9" stroke-linejoin="round"/><polygon points="213.6,177.2 192.8,189.2 192.8,168.8 213.6,156.8" fill="#FFFFFE" stroke="#17160F" stroke-width="0.9" stroke-linejoin="round"/><polygon points="188.7,142.4 213.6,156.8 192.8,168.8 167.9,154.4" fill="#F2F1EC" stroke="#17160F" stroke-width="0.9" stroke-linejoin="round"/><polygon points="188.7,142.4 213.6,156.8 192.8,168.8 167.9,154.4" fill="#F2C200" stroke="#17160F" stroke-width="0.9" stroke-linejoin="round" opacity="0"><animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;0.86;0.900;0.999;1" dur="1s" repeatCount="indefinite"/></polygon><ellipse cx="190.7" cy="155.6" rx="0" ry="0" fill="none" stroke="#C99A00" stroke-width="1.3" opacity="0"><animate attributeName="rx" values="0;0;18;18" keyTimes="0;0.86;0.980;1" dur="1s" repeatCount="indefinite"/><animate attributeName="ry" values="0;0;9;9" keyTimes="0;0.86;0.980;1" dur="1s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.9;0;0" keyTimes="0;0.86;0.980;1" dur="1s" repeatCount="indefinite"/></ellipse><path d="M138.7 56.6L155.7 38.6H159.7" fill="none" stroke="#17160F" stroke-width="1"/><circle cx="138.7" cy="56.6" r="2" fill="#17160F"/><rect x="159.7" y="26.6" width="82.0" height="24" rx="12" fill="#FFFFFE" stroke="#17160F" stroke-width="1"/><circle cx="173.7" cy="38.6" r="3.2" fill="#F2C200"/><text x="207.7" y="42.8" text-anchor="middle" class="svt" style="fill:#17160F">AI node</text>
+          </svg>
+          <p class="d mt-3 text-2xl">milliseconds</p>
+        </article>
+        <div class="space-y-4 text-muted sm:col-span-2 sm:grid sm:grid-cols-2 sm:gap-8 sm:space-y-0">
+          <p>Inference silicon is purpose-built and cheap enough that utilization is no longer the gate to ownership. A few servers with current accelerators, in one room, on one power and cooling plant, can now carry both the transactional processing the business runs and the operation of the facility around it. These workloads are bounded and repetitive, at a scale set by what a business generates in a day. Hyperscale was never sized for this work.</p>
+          <p>Ownership bounds latency and ensures availability. Moves, adds and changes are not linked to subscriptions. On-site control decisions resolve in milliseconds, not round-trip delays. <span class="st text-ink"><i></i>Operations continue when the internet goes down.</span> And the data is on a machine the business owns, in a room it controls, on a network it operates.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- two domains -->
+  <section class="py-20 md:py-28" aria-labelledby="dm-h2">
+    <div class="mx-auto max-w-page px-5 md:px-8">
+      <div class="grid gap-6 lg:grid-cols-12">
+        <h2 id="dm-h2" class="d h2 lg:col-span-4">Two AI domains</h2>
+        <p class="measure text-lg text-muted lg:col-span-7 lg:col-start-6">On-premises AI divides into two domains. They are not the same workload. Whether they run on one infrastructure is an economic decision, not an architectural one.</p>
+      </div>
+      <div class="mt-12 grid gap-4 lg:grid-cols-2">
+        <article class="mod p-6 md:p-8">
+          <div class="flex items-baseline justify-between gap-4"><h3 class="d text-3xl">AI IT</h3><p class="text-muted">runs the business</p></div>
+          <dl class="mt-6 divide-y divide-line border-t border-line text-[15px]">
+            <div class="grid gap-1 py-3 sm:grid-cols-[200px_1fr]"><dt class="font-medium">Resident model</dt><dd class="text-muted">answers staff and operational queries</dd></div>
+            <div class="grid gap-1 py-3 sm:grid-cols-[200px_1fr]"><dt class="font-medium">Retrieval</dt><dd class="text-muted">over the operation’s own records and documents</dd></div>
+            <div class="grid gap-1 py-3 sm:grid-cols-[200px_1fr]"><dt class="font-medium">Transactions and inventory</dt><dd class="text-muted">shrink, out-of-stock, basket composition</dd></div>
+            <div class="grid gap-1 py-3 sm:grid-cols-[200px_1fr]"><dt class="font-medium">Scheduling and staffing</dt><dd class="text-muted">against traffic, hours and throughput</dd></div>
+            <div class="grid gap-1 py-3 sm:grid-cols-[200px_1fr]"><dt class="font-medium">Yield and flow</dt><dd class="text-muted">pick rates, room turnover, patient and guest flow</dd></div>
+            <div class="grid gap-1 py-3 sm:grid-cols-[200px_1fr]"><dt class="font-medium">Yield and quality</dt><dd class="text-muted">scrap, in-line inspection, equipment effectiveness</dd></div>
+            <div class="grid gap-1 py-3 sm:grid-cols-[200px_1fr]"><dt class="font-medium">Compliance records</dt><dd class="text-muted">retained and queryable on site</dd></div>
+          </dl>
+        </article>
+        <article class="mod p-6 md:p-8" style="border-color:#E6CF6A">
+          <div class="flex items-baseline justify-between gap-4"><h3 class="d text-3xl">AI OT <span class="ml-1 inline-block h-2.5 w-8 rounded-full bg-acc align-middle" aria-hidden="true"></span></h3><p class="text-muted">runs the infrastructure</p></div>
+          <dl class="mt-6 divide-y divide-line border-t border-line text-[15px]">
+            <div class="grid gap-1 py-3 sm:grid-cols-[200px_1fr]"><dt class="font-medium">Room sensors</dt><dd class="text-muted">temperature, humidity, airflow, leak, smoke</dd></div>
+            <div class="grid gap-1 py-3 sm:grid-cols-[200px_1fr]"><dt class="font-medium">Power</dt><dd class="text-muted">UPS, PDU and circuit load, transfer switch</dd></div>
+            <div class="grid gap-1 py-3 sm:grid-cols-[200px_1fr]"><dt class="font-medium">Cooling</dt><dd class="text-muted">setpoints and airflow</dd></div>
+            <div class="grid gap-1 py-3 sm:grid-cols-[200px_1fr]"><dt class="font-medium">Cameras</dt><dd class="text-muted">anomaly and access events</dd></div>
+            <div class="grid gap-1 py-3 sm:grid-cols-[200px_1fr]"><dt class="font-medium">Access control</dt><dd class="text-muted">door locks and badge readers</dd></div>
+            <div class="grid gap-1 py-3 sm:grid-cols-[200px_1fr]"><dt class="font-medium">Fire and energy</dt><dd class="text-muted">detection, suppression, PUE metering</dd></div>
+            <div class="grid gap-1 py-3 sm:grid-cols-[200px_1fr]"><dt class="font-medium">Machines</dt><dd class="text-muted">vibration, motor current, valve and drive state</dd></div>
+          </dl>
+        </article>
+      </div>
+      <div class="mt-12 grid gap-8 text-muted md:grid-cols-2">
+        <p><b class="font-medium text-ink">Why it matters</b> — the AI OT column is the set of facility domains that support the work: electrical, mechanical, security and fire in <span class="id text-ink">ANSI/TIA-942</span> terms, plus the process equipment itself in manufacturing, cultivation and other operational settings. Some of it supports the business workloads directly; the rest runs the operation. Timing is bounded, failure behaviour is defined, and the consequence of an output is physical.</p>
+        <p><b class="font-medium text-ink">And it extends</b> — staff phones are clients to the same node, so the remote monitoring a vendor would otherwise sell as a service is part of what the business already owns. An app queries the node by voice or text — from the floor, from the office, or from off site over VPN — with no cloud account and no third-party server in the path. The model and the records stay on the hardware the business owns; the phone renders the answer. Adding a device is not adding a subscription, and nobody else is holding the monitoring contract.</p>
+      </div>
+      <p class="d mt-12 max-w-4xl text-2xl leading-snug md:text-3xl">The domains are independent. Commonality in infrastructure is an economic choice. <span class="text-muted">The servers can be sized to run business and operations together — one set of accelerators, one storage tier and one maintenance regime rather than two.</span></p>
+    </div>
+  </section>
+
+  <!-- workloads the infrastructure runs -->
+  <section class="bg-ink py-20 text-canvas md:py-28" aria-labelledby="tg-h">
+    <div class="mx-auto grid max-w-page gap-10 px-5 md:px-8 lg:grid-cols-12">
+      <p class="text-[#C9C6BA] lg:col-span-5">The same AI capabilities a business runs as workloads — inference, prediction, optimization, classification, anomaly detection — can be applied to the operational intelligence of the infrastructure domain itself.</p>
+      <ul class="space-y-3 lg:col-span-6 lg:col-start-7">
+        <li class="flex gap-3"><span class="mt-2.5 h-1.5 w-4 shrink-0 rounded-full bg-acc"></span>Adjusting cooling setpoints against measured load.</li>
+        <li class="flex gap-3"><span class="mt-2.5 h-1.5 w-4 shrink-0 rounded-full bg-acc"></span>Detecting thermal anomalies before protection trips.</li>
+        <li class="flex gap-3"><span class="mt-2.5 h-1.5 w-4 shrink-0 rounded-full bg-acc"></span>Forecasting heating, cooling and lighting demand at hourly, daily and seasonal horizons.</li>
+        <li class="flex gap-3"><span class="mt-2.5 h-1.5 w-4 shrink-0 rounded-full bg-acc"></span>Holding an environmental setpoint against a crop or a process target.</li>
+        <li class="flex gap-3"><span class="mt-2.5 h-1.5 w-4 shrink-0 rounded-full bg-acc"></span>Predicting mechanical-equipment failure before it occurs.</li>
+      </ul>
+      <h2 id="tg-h" class="d h1 lg:col-span-12">These are workloads the infrastructure runs to operate itself. <span class="text-acc">AI as architecture, not as tenant.</span></h2>
+    </div>
+  </section>
+
+  <nav class="mx-auto max-w-page px-5 py-16 md:px-8" aria-label="Pages">
+    <a href="#framework" class="group grid gap-1 border-t border-line py-6 md:grid-cols-[1fr_1fr_24px] md:items-baseline"><span class="d text-2xl">Built from industry standards</span><span class="text-muted">Not a rack in a closet, and not a vendor architecture.</span><span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span></a>
+    <a href="#domains" class="group grid gap-1 border-t border-line py-6 md:grid-cols-[1fr_1fr_24px] md:items-baseline"><span class="d text-2xl">Every premises domain</span><span class="text-muted">Each of those standards governs one built environment.</span><span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span></a>
+    <a href="#examples" class="group grid gap-1 border-y border-line py-6 md:grid-cols-[1fr_1fr_24px] md:items-baseline"><span class="d text-2xl">Pay for what you need</span><span class="text-muted">Ten answers are enough to estimate and cost a build.</span><span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span></a>
+  </nav>
+</div>
+<!-- ================= FRAMEWORK ================= -->
+<div class="page" data-page="framework">
+  <section class="mx-auto grid max-w-page gap-8 px-5 pb-16 pt-14 md:px-8 md:pt-20 lg:grid-cols-12" aria-labelledby="fw-h">
+    <h1 id="fw-h" class="d h1 lg:col-span-7">Built from industry standards</h1>
+    <p class="text-lg lg:col-span-4 lg:col-start-9 lg:pt-4">AIxAIoT delivers the infrastructure as a specified system — in every domain, and for the edge data center within it. Not a rack in a closet, and not a vendor architecture.</p>
+  </section>
+
+  <!-- basis -->
+  <section class="signal-line border-t border-line bg-surface py-20 md:py-28" aria-labelledby="ba-h">
+    <div class="mx-auto grid max-w-page gap-10 px-5 md:px-8 lg:grid-cols-12">
+      <div class="lg:col-span-5">
+        <h2 id="ba-h" class="d h2">Edge devices close the loop</h2>
+        <figure class="mt-8 overflow-hidden rounded-mod"><img class="ph aspect-[4/3] w-full object-cover" src="assets/img/led-ceiling.webp" alt="A ceiling grid of slim linear LED luminaires with an integrated sensor" width="1600" height="1200" loading="lazy"></figure>
+        <p class="mt-3 text-sm text-muted">Lighting is the clearest case: LED luminaires are addressable, powered over the same cabling, and present in every square metre of every domain, which makes them the densest sensing and actuation grid a building already owns.</p>
+      </div>
+      <div class="lg:col-span-6 lg:col-start-7">
+        <div class="space-y-5 text-muted">
+          <p>Premises infrastructure takes power and cooling, pathways and spaces, cabling, grounding and bonding, physical security — and beneath all of it, a sensing and control layer for environmental, security and visual monitoring. Each of those parts is already governed by a published standard. AIxAIoT is the framework that assembles them into one standards-compliant deployable design.</p>
+          <p>The basis for AI operations in any domain is the same: edge devices. Sensors measure, actuators act, and the inference between them closes the loop. Every domain already holds that population — lighting, cameras, environmental and electrical sensing, access control, and the equipment particular to the work done there — but installed as separate subsystems rather than as one instrumented layer.</p>
+        </div>
+        <div class="loop mod mt-8 p-4 sm:p-5">
+          <div class="relative grid gap-2 sm:grid-cols-[1fr_40px_1fr_40px_1fr] sm:gap-0">
+            <div class="loop-card loop-c1 mod-in flex flex-col items-center justify-center gap-3 px-4 py-5 text-center"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect x="4" y="9" width="12" height="16" rx="3" fill="#FFFFFE" stroke="#17160F" stroke-width="1.4"/><circle cx="10" cy="17" r="2.2" fill="#F2C200" stroke="#17160F" stroke-width="1.1"/><path class="loop-wave" d="M20 12.5a7 7 0 0 1 0 9" fill="none" stroke="#17160F" stroke-width="1.4" stroke-linecap="round"/><path class="loop-wave loop-wave-2" d="M24 9.5a11.5 11.5 0 0 1 0 15" fill="none" stroke="#17160F" stroke-width="1.4" stroke-linecap="round"/></svg><p class="font-medium">Sensors measure</p></div>
+            <span class="loop-conn loop-k1" aria-hidden="true"></span>
+            <div class="loop-card loop-c2 flex flex-col items-center justify-center gap-3 rounded-in bg-ink px-4 py-5 text-center text-canvas"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><path d="M17 4l11 6.3v13.4L17 30 6 23.7V10.3z" fill="#3A5A9C" stroke="#FBFBF8" stroke-width="1.2" stroke-linejoin="round"/><path d="M6 10.3L17 16.6 28 10.3M17 16.6V30" fill="none" stroke="#FBFBF8" stroke-width="1.2" stroke-linejoin="round"/><path d="M6 10.3L17 4l11 6.3L17 16.6z" fill="#5577BC"/><path d="M6.8 10.8L17 16.6l10.2-5.8" fill="none" stroke="#F2C200" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><p class="font-medium">the inference between them</p></div>
+            <span class="loop-conn loop-k2" aria-hidden="true"></span>
+            <div class="loop-card loop-c3 mod-in flex flex-col items-center justify-center gap-3 px-4 py-5 text-center"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><path d="M5 13l12-6.5L29 13v10L17 29.5 5 23z" fill="#FFFFFE" stroke="#17160F" stroke-width="1.4" stroke-linejoin="round"/><path d="M5 13l12 6.5L29 13M17 19.5v10" fill="none" stroke="#17160F" stroke-width="1.4" stroke-linejoin="round"/><path d="M5 13l12-6.5L29 13 17 19.5z" fill="#F2F1EC" stroke="#17160F" stroke-width="1.4" stroke-linejoin="round"/><circle class="loop-gear" cx="17" cy="12.8" r="2.4" fill="none" stroke="#17160F" stroke-width="1.3" stroke-dasharray="2 1.2"/></svg><p class="font-medium">actuators act</p></div>
+          </div>
+          <div class="loop-return hidden sm:block" aria-hidden="true"><i></i></div>
+        </div>
+        <p class="d mt-10 text-2xl leading-snug">When the sensor delivers unfiltered measurements — not a vendor-conditioned value — the filtering, estimation and control computation reside in the AI, where they are explicit. <span class="text-muted">The control law is then computational and can be written in closed form: an open mathematical model relating the measured quantities to the actuation they drive, available for inspection, verification and revision.</span></p>
+        <p class="mt-10 text-muted">These operational-edge populations — sensors, cameras, lighting and actuators — are not equally addressed by the existing standards. The cabling that connects them, the power that feeds them, and the pathways and spaces in which they live are addressed by a layered set:</p>
+        <table class="mt-5 w-full text-left text-[15px]">
+          <tbody class="divide-y divide-line border-y border-line">
+            <tr><th scope="row" class="py-3 pr-4 font-normal"><span class="id">ANSI/TIA-568</span></th><td class="py-3 text-muted">for cabling</td></tr>
+            <tr><th scope="row" class="py-3 pr-4 font-normal"><span class="id">ANSI/TIA-569</span></th><td class="py-3 text-muted">for pathways and spaces</td></tr>
+            <tr><th scope="row" class="py-3 pr-4 font-normal"><span class="id">IEEE 802.3</span></th><td class="py-3 text-muted">for Ethernet at its various physical layers</td></tr>
+            <tr><th scope="row" class="py-3 pr-4 font-normal">BACnet, DALI, OSDP, OPC UA, IETF</th><td class="py-3 text-muted">are addressed by others</td></tr>
+          </tbody>
+        </table>
+        <p class="mt-5"><span class="text-muted">The architectural framework that integrates all of these into a coherent operational-intelligence layer is addressed by none of them.</span> <b class="font-medium">That is what AIxAIoT specifies.</b></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- extended stack: isometric slabs, select to inspect -->
+  <section class="py-20 md:py-28" aria-labelledby="st-h">
+    <div class="mx-auto max-w-page px-5 md:px-8">
+      <div class="grid gap-6 lg:grid-cols-12">
+        <h2 id="st-h" class="d h2 lg:col-span-4">The extended stack</h2>
+        <p class="measure text-muted lg:col-span-7 lg:col-start-6">The framework is the set of published standards that govern the autonomous infrastructure end to end, arranged as one stack. Ten layers: the seven of the <span class="id text-ink">ISO/IEC 7498-1</span> network model, and beneath them three that operational technology depends on and that the network model does not describe — the media itself, the pathways and spaces it runs through, and the power that operates the device at the end of it.</p>
+      </div>
+      <div class="mt-12 grid gap-4 lg:grid-cols-12">
+        <div class="mod p-4 lg:col-span-7"><svg id="slabs" class="block w-full" viewBox="0 0 640 600" role="img" aria-label="Ten layers, L7 at the top to G2 at the bottom; select one to read it."></svg></div>
+        <div class="mod flex flex-col p-6 lg:col-span-5" aria-live="polite">
+          <p id="ly-tag" class="id text-3xl">L0</p>
+          <h3 id="ly-name" class="d mt-3 text-3xl">Media</h3>
+          <p id="ly-body" class="mt-4 text-muted"></p>
+          <ol id="ly-list" class="mt-auto grid grid-cols-5 gap-1.5 pt-8"></ol>
+        </div>
+      </div>
+      <!-- full text, always available -->
+      <details class="mt-4 rounded-mod border border-line bg-surface px-6 py-4">
+        <summary class="cursor-pointer font-medium">The extended stack</summary>
+        <dl id="ly-all" class="mt-4 divide-y divide-line text-[15px]"></dl>
+      </details>
+    </div>
+  </section>
+
+  <!-- three peers -->
+  <section class="border-t border-line bg-surface py-20 md:py-28" aria-labelledby="fb-h">
+    <div class="mx-auto max-w-page px-5 md:px-8">
+      <div class="grid gap-6 lg:grid-cols-12">
+        <h2 id="fb-h" class="d h2 lg:col-span-5">Stack · Database · AI Fabric</h2>
+        <p class="measure text-lg lg:col-span-6 lg:col-start-7">The stack is one of three peers. On its own it moves bits; what makes an operation autonomous is the record the stack produces and the workloads that consume it.</p>
+      </div>
+      <!-- AI fabric spans all three parts; interfaces sit under the joints they connect -->
+      <div class="relative mt-14 hidden h-6 rounded-t-[10px] border-x-2 border-t-2 border-acc lg:block" aria-hidden="true"></div>
+      <p class="relative z-10 mt-12 flex flex-wrap items-center gap-x-0 gap-y-1 text-sm lg:-mt-[38px] lg:justify-center"><span class="hidden w-2 bg-surface lg:block self-stretch"></span><span class="rounded-ctl bg-acc px-2.5 py-1 font-medium"><span class="id">AI FABRIC</span></span><span class="bg-surface px-3 text-muted">AI capabilities span the architecture</span></p>
+      <div class="mt-6 grid gap-3 lg:grid-cols-6 lg:gap-x-3 lg:gap-y-0">
+        <article class="mod order-1 flex flex-col p-6 lg:col-span-2 lg:row-start-1"><p class="mod-t">Part 1 — the stack</p><p class="d mt-3 text-2xl">Runtime data plane.</p><p class="mt-2 text-muted">L7 through L0, then G1 pathways and spaces and G2 power — the ten layers above, terminating in AI-capable operational devices.</p></article>
+        <article class="mod order-3 flex flex-col p-6 lg:col-span-2 lg:row-start-1"><p class="mod-t">Part 2 — the database</p><p class="d mt-3 text-2xl">Canonical AI-ready records:</p><p class="mt-2 text-muted">physical-plant records, logical-plant records, identity binding records.</p><div class="mt-auto pt-6"><p class="border-t border-line pt-4 text-sm">Initialized at <span class="id">ANSI/TIA-1152-A</span> field test · per <span class="id">ANSI/TIA-606-D</span>, IPv6 and certificates</p></div></article>
+        <article class="mod order-5 flex flex-col p-6 lg:col-span-2 lg:row-start-1"><p class="mod-t">Part 3 — AI fabric</p><p class="d mt-3 text-2xl">AI workload consumer layer:</p><p class="mt-2 text-muted">inference at the device, at the edge controller, and optionally in the cloud.</p><div class="mt-auto pt-6"><p class="border-t border-line pt-4 text-sm">Model lifecycle · feature vectors · derived records · commands</p></div></article>
+        <div class="iface order-2 lg:col-span-2 lg:col-start-2 lg:row-start-2"><div class="rounded-in border border-dashed border-edge/60 bg-[#FFFBEA] p-5"><p class="text-sm"><span class="id">DATABASE INTERFACE 1 ↔ 2</span></p><p class="mt-2 text-sm text-muted">Envelope, PTP timestamps, integrity hashes, identity binding.</p></div></div>
+        <div class="iface order-4 lg:col-span-2 lg:col-start-4 lg:row-start-2"><div class="rounded-in border border-dashed border-edge/60 bg-[#FFFBEA] p-5"><p class="text-sm"><span class="id">DATABASE INTERFACE 2 ↔ 3</span></p><p class="mt-2 text-sm text-muted">Time-series queries, identity-scoped queries, feature-vector contracts, schema versioned.</p></div></div>
+      </div>
+      <p class="d mt-12 max-w-3xl text-2xl leading-snug">The stack without the database is plumbing. <span class="text-muted">The database without the fabric is archival; the fabric without both is models without data.</span></p>
+    </div>
+  </section>
+
+  <!-- operational edge -->
+  <section class="py-20 md:py-28" aria-labelledby="ed-h">
+    <div class="mx-auto max-w-page px-5 md:px-8">
+      <div class="grid gap-10 lg:grid-cols-12">
+        <div class="lg:col-span-5">
+          <h2 id="ed-h" class="d h2">The data center operational edge</h2>
+          <figure class="mt-8 overflow-hidden rounded-mod"><img class="ph aspect-[4/3] w-full object-cover" src="assets/img/spe-cable.webp" alt="A yellow single-pair Ethernet cable terminating into a small wall-mounted sensor" width="1600" height="1200" loading="lazy"></figure>
+        </div>
+        <div class="space-y-5 text-muted lg:col-span-6 lg:col-start-7">
+          <p>Twenty-five years of facility-architecture standards sit behind <span class="id text-ink">ANSI/TIA-942</span>, and they are mature. But the distribution-area hierarchy terminates at the equipment outlet in the equipment distribution area. <span class="id text-ink">BICSI 002</span> defers the portion beyond that outlet to the equipment manufacturer.</p>
+          <p>Which leaves the operational technology outside the standard. The sensors, actuators, cameras, lighting and locks that actually operate a facility are not part of the rated telecommunications infrastructure. In practice each subsystem arrives with its own cabling, its own gateway, its own addressing and its own record format — and the operator stitches them together, or a vendor does it for them, differently at every site.</p>
+          <p>AIxAIoT carries the same discipline past the outlet. Single-pair Ethernet reaches each sensor and actuator with data and power on one pair; power is classified per device and budgeted across the segment; the installation is field-qualified against a published limit; and every device is addressable and time-synchronised, so what it reports is written to a common record schema rather than held as a reading inside a subsystem. The operational layer becomes part of the rated facility instead of an appliance sitting beside it.</p>
+        </div>
+      </div>
+      <figure class="mod mt-12 p-4 md:p-8">
+        <div class="overflow-x-auto">
+          <svg viewBox="0 0 1100 330" class="w-full min-w-[980px] lg:min-w-0" role="img" aria-labelledby="eg5"><title id="eg5">The TIA-942-C distribution-area hierarchy runs MDA, IDA, HDA, ZDA, EDA and terminates at the equipment outlet. Beyond it, the operational-technology infrastructure — sensors, cameras, lighting, actuators — is unspecified; BICSI 002 §13.5.3.2 defers it to the manufacturer's instructions and local codes.</title>
+            <text x="20" y="28" class="svm" fill="#5D5B52">TIA-942-C · distribution-area hierarchy (structured cabling)</text>
+            <g class="svb">
+              <rect x="20" y="52" width="84" height="56" rx="10" class="sv" fill="#FFFFFE"/><text x="62" y="86" text-anchor="middle" class="svb">MDA</text>
+              <rect x="134" y="52" width="84" height="56" rx="10" class="sv" fill="#FFFFFE"/><text x="176" y="86" text-anchor="middle" class="svb">IDA</text>
+              <rect x="248" y="52" width="84" height="56" rx="10" class="sv" fill="#FFFFFE"/><text x="290" y="86" text-anchor="middle" class="svb">HDA</text>
+              <rect x="362" y="52" width="84" height="56" rx="10" class="sv" fill="#FFFFFE"/><text x="404" y="86" text-anchor="middle" class="svb">ZDA</text>
+              <rect x="476" y="52" width="84" height="56" rx="10" fill="#17160F"/><text x="518" y="86" text-anchor="middle" class="svb" fill="#FBFBF8">EDA</text>
+            </g>
+            <path class="sv" d="M104 80 H134 M218 80 H248 M332 80 H362 M446 80 H476 M518 108 V150"/>
+            <rect x="488" y="150" width="60" height="34" rx="8" fill="#F2F1EC" class="sv"/><text x="518" y="172" text-anchor="middle" class="svb">EO</text>
+            <text x="518" y="204" text-anchor="middle" class="svt">equipment outlet</text>
+            <path class="sv sv-m" d="M20 232 V242 H560 V232"/>
+            <text x="290" y="266" text-anchor="middle" class="svt">structured-cabling topology — located in the distribution areas</text>
+            <path d="M600 40 V300" stroke="#8C6E00" stroke-width="2" stroke-dasharray="6 6"/>
+            <text x="600" y="322" text-anchor="middle" class="svt" fill="#8C6E00">structured cabling terminates (at the EO)</text>
+            <text x="860" y="30" text-anchor="middle" class="svm">UNSPECIFIED (prerequisite gap)</text>
+            <rect x="640" y="48" width="440" height="100" rx="14" fill="#FFF6CC" stroke="#8C6E00" stroke-width="1.5" stroke-dasharray="7 6"/>
+            <text x="860" y="90" text-anchor="middle" class="svb">operational-technology infrastructure</text>
+            <text x="860" y="116" text-anchor="middle" class="svt">sensors · cameras · lighting · actuators</text>
+            <path class="run" d="M548 167 C 590 167, 600 120, 640 110"/>
+            <text x="860" y="210" text-anchor="middle" class="svt">BICSI 002 §13.5.3.2 defers this portion to the</text>
+            <text x="860" y="230" text-anchor="middle" class="svt">manufacturer’s instructions &amp; local codes</text>
+          </svg>
+        </div>
+        <figcaption class="mt-4 text-sm text-muted">Structured cabling terminates at the equipment outlet. The operational-technology infrastructure beyond it — sensors, cameras, lighting, actuators — is unspecified.</figcaption>
+      </figure>
+      <p class="d mt-12 max-w-4xl text-2xl leading-snug"><span class="rounded bg-acc px-1.5">The consequence</span> — one record schema common to every subsystem in the building, which is the precondition for an AI that can act on the facility rather than merely display it.</p>
+    </div>
+  </section>
+
+  <!-- parallel operation: failure-mode register -->
+  <section class="border-t border-line bg-surface py-20 md:py-28" aria-labelledby="pa-h">
+    <div class="mx-auto max-w-page px-5 md:px-8">
+      <div class="grid gap-6 lg:grid-cols-12">
+        <h2 id="pa-h" class="d h2 lg:col-span-4">Parallel operation</h2>
+        <p class="measure text-lg lg:col-span-7 lg:col-start-6">The first question any cloud incumbent will raise is availability: what happens when the network fails.</p>
+      </div>
+      <div class="mt-12 overflow-hidden rounded-mod border border-line">
+        <table class="w-full text-left text-[15px]">
+          <tbody class="divide-y divide-line">
+            <tr class="grid gap-1 bg-surface p-5 md:table-row md:p-0"><th scope="row" class="align-top font-medium md:w-[300px] md:p-5">Redundancy inside the node.</th><td class="text-muted md:p-5">Accelerators are specified in pairs. A card failure costs headroom, not service — the workload continues on the survivor while the part is replaced.</td></tr>
+            <tr class="grid gap-1 bg-surface p-5 md:table-row md:p-0"><th scope="row" class="align-top font-medium md:p-5">Nodes as peers, not islands.</th><td class="text-muted md:p-5">Because each node runs far below capacity, nodes serve several sites and can carry each other’s. The fleet is N+1 by arithmetic rather than by buying a spare for every location.</td></tr>
+            <tr class="grid gap-1 bg-surface p-5 md:table-row md:p-0"><th scope="row" class="align-top font-medium md:p-5">Maintenance in parallel.</th><td class="text-muted md:p-5">Updates, model changes and hardware work are staged on one node while another serves. There is no maintenance window in which the business stops.</td></tr>
+            <tr class="grid gap-1 bg-surface p-5 md:table-row md:p-0"><th scope="row" class="align-top font-medium md:p-5">Ride-through on the electrical side.</th><td class="text-muted md:p-5">The UPS covers a transient and provides orderly shutdown on a sustained outage. Generator capacity is an option, not a requirement, because the load is about a kilowatt rather than a data hall.</td></tr>
+            <tr class="grid gap-1 bg-[#FFFBEA] p-5 md:table-row md:p-0"><th scope="row" class="align-top font-medium md:p-5"><span class="st"><i></i>Independent of the circuit.</span></th><td class="text-muted md:p-5">A cut fibre or an ISP incident takes a cloud-dependent operation off the air entirely; here it takes away remote access while the business, the sensing and the control loops keep running on site.</td></tr>
+            <tr class="grid gap-1 bg-surface p-5 md:table-row md:p-0"><th scope="row" class="align-top font-medium md:p-5">Failures seen before they become outages.</th><td class="text-muted md:p-5">The operational layer watches the conditions that cause on-premises failures — thermal rise, power anomalies, water, airflow loss — and raises them while there is still time to act.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-8 grid gap-4 md:grid-cols-2">
+        <p class="mod-in p-6 text-lg"><span class="st crit mr-1 align-middle"><i></i></span> A cloud agreement offers a credit when the service is lost; it does not offer continuity, and the failure domain is somebody else’s and invisible.</p>
+        <p class="rounded-in bg-ink p-6 text-lg text-canvas"><span class="st mr-1 align-middle"><i></i></span> Here the failure domains are small, local, observable and owned.</p>
+      </div>
+      <p class="mt-4 text-sm text-muted">Set against a cloud service, the comparison is not availability percentage against availability percentage.</p>
+    </div>
+  </section>
+
+  <section class="py-20 md:py-28" aria-labelledby="po-h">
+    <div class="mx-auto grid max-w-page gap-8 px-5 md:px-8 lg:grid-cols-12">
+      <h2 id="po-h" class="d h2 lg:col-span-6">A commercial position, not a technical one</h2>
+      <div class="lg:col-span-5 lg:col-start-8">
+        <p class="text-lg">Standards-based means more than one vendor can supply the parts, and the installation can be field-verified against a published limit rather than a supplier datasheet.</p>
+        <div class="mt-8 flex flex-wrap gap-3"><a href="#domains" class="btn btn-acc">Domains</a><a href="#examples" class="btn btn-ln">Worked examples</a></div>
+      </div>
+    </div>
+  </section>
+</div>
+<!-- ================= DOMAINS ================= -->
+<div class="page" data-page="domains">
+  <section class="mx-auto grid max-w-page gap-8 px-5 pb-16 pt-14 md:px-8 md:pt-20 lg:grid-cols-12" aria-labelledby="dm-h">
+    <div class="lg:col-span-6"><p class="mod-t">Where it applies</p><h1 id="dm-h" class="d h1 mt-4">Every premises domain</h1></div>
+    <p class="text-lg lg:col-span-5 lg:col-start-8 lg:pt-12">The framework follows the premises hierarchy the cabling standards already define. Generic cabling sits at the base — <span class="id">ANSI/TIA-568.0</span>, and <span class="id">ISO/IEC 11801</span> internationally — and beneath every premises standard built on it. Each of those standards governs one built environment.</p>
+  </section>
+
+  <div class="signal-line border-t border-line" aria-hidden="true"></div>
+  <section class="mx-auto max-w-page px-5 pb-20 pt-16 md:px-8 md:pb-28 md:pt-20" aria-labelledby="fd-h">
+    <div class="mod p-5 md:p-8">
+      <div class="grid gap-4 md:grid-cols-12">
+        <h2 id="fd-h" class="d text-2xl md:col-span-6">Every premises domain — on one foundation</h2>
+        <p class="text-muted md:col-span-6">Autonomous infrastructure is horizontal. It spans the full set of <span class="id text-ink">ANSI/TIA</span> premises standards — plus controlled-environment agriculture.</p>
+      </div>
+      <ul class="mt-8 grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <li class="mod-in p-4"><span class="id text-xs">ANSI/TIA-568.1</span><p class="d mt-6 text-lg">Commercial</p><p class="text-sm text-muted">Offices &amp; mixed-use</p></li>
+        <li class="mod-in p-4"><span class="id text-xs">ANSI/TIA-570</span><p class="d mt-6 text-lg">Residential</p><p class="text-sm text-muted">Homes &amp; MDUs</p></li>
+        <li class="rounded-in bg-ink p-4 text-canvas"><span class="id text-xs text-acc">ANSI/TIA-942</span><p class="d mt-6 text-lg">Data centers</p><p class="text-sm text-[#C9C6BA]">Physical infrastructure</p></li>
+        <li class="mod-in p-4"><span class="id text-xs">ANSI/TIA-1005</span><p class="d mt-6 text-lg">Industrial</p><p class="text-sm text-muted">Factory &amp; automation</p></li>
+        <li class="mod-in p-4"><span class="id text-xs">ANSI/TIA-1179</span><p class="d mt-6 text-lg">Healthcare</p><p class="text-sm text-muted">Clinical facilities</p></li>
+        <li class="mod-in p-4"><span class="id text-xs">ANSI/TIA-4966</span><p class="d mt-6 text-lg">Educational</p><p class="text-sm text-muted">Campuses &amp; labs</p></li>
+        <li class="rounded-in bg-[#FFF6CC] p-4"><span class="text-xs font-medium text-edge">Beyond TIA scope</span><p class="d mt-6 text-lg">Agriculture</p><p class="text-sm text-muted">Controlled-environment</p></li>
+        <li class="rounded-in border border-dashed border-line p-4"><span class="text-xs text-muted">Domain-agnostic</span><p class="d mt-6 text-lg text-muted">…and more</p><p class="text-sm text-muted">New profiles to follow</p></li>
+      </ul>
+      <div class="mt-2 flex flex-col gap-1 rounded-in bg-acc px-5 py-4 sm:flex-row sm:items-baseline sm:gap-6"><span class="id">ANSI/TIA-568.0</span><span class="d text-lg">Generic cabling — the common foundation</span></div>
+      <div class="mt-6 grid gap-4 text-sm text-muted md:grid-cols-2">
+        <p><b class="font-medium text-ink">Commercial buildings increasingly contain their own edge data centers</b> — the commercial and data center domains converge.</p>
+        <p>One generic standard underpins every premises domain — and one architecture makes any of them autonomous, instantiated per domain.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t border-line bg-surface py-20 md:py-28" aria-labelledby="ot-h">
+    <div class="mx-auto max-w-page px-5 md:px-8">
+      <div class="grid gap-6 lg:grid-cols-12">
+        <div class="lg:col-span-5"><p class="mod-t">Operational technology</p><h2 id="ot-h" class="d h2 mt-3">What the loop closes on</h2></div>
+        <p class="measure text-lg lg:col-span-6 lg:col-start-7 lg:pt-10">Each domain already holds the device population an operational layer acts on — installed as separate subsystems rather than as one instrumented layer.</p>
+      </div>
+      <div class="mt-12 divide-y divide-line border-y border-line">
+        <article class="grid gap-5 py-6 md:grid-cols-[240px_200px_1fr]"><img class="ph aspect-[16/10] w-full rounded-in object-cover" src="assets/img/commercial.webp" alt="An empty modern office floor with linear LED luminaires and glass meeting rooms" width="1600" height="1200" loading="lazy"><div><span class="id text-sm">ANSI/TIA-568.1</span><h3 class="d mt-1 text-2xl">Commercial</h3></div><div><p>LED lighting and occupancy, HVAC and zone control, access control and cameras, metering, leak and air-quality sensing.</p><p class="mt-2 text-sm text-muted">Offices and mixed-use premises, increasingly containing their own edge data centers.</p></div></article>
+        <article class="grid gap-5 py-6 md:grid-cols-[240px_200px_1fr]"><img class="ph aspect-[16/10] w-full rounded-in object-cover" src="assets/img/industrial.webp" alt="A row of electric motors and pumps on steel skids on a clean factory floor" width="1600" height="1200" loading="lazy"><div><span class="id text-sm">ANSI/TIA-1005</span><h3 class="d mt-1 text-2xl">Industrial</h3></div><div><p>LED high-bay lighting, drives, valves, pumps and motors, vibration and current sensing, machine vision, safety interlocks, compressed air and energy metering.</p><p class="mt-2 text-sm text-muted">The largest operational device population of any domain.</p></div></article>
+        <article class="grid gap-5 py-6 md:grid-cols-[240px_200px_1fr]"><img class="ph aspect-[16/10] w-full rounded-in object-cover" src="assets/img/healthcare.webp" alt="A calm dental treatment room with warm lighting and a wall-mounted sensor" width="1600" height="1200" loading="lazy"><div><span class="id text-sm">ANSI/TIA-1179</span><h3 class="d mt-1 text-2xl">Healthcare</h3></div><div><p>LED and circadian lighting, room pressure and air change sensing, temperature monitoring for storage, access control, nurse call and asset location.</p><p class="mt-2 text-sm text-muted">The operational layer carries a regulatory record obligation as well as a control function.</p></div></article>
+        <article class="grid gap-5 py-6 md:grid-cols-[240px_200px_1fr]"><img class="ph aspect-[16/10] w-full rounded-in object-cover" src="assets/img/educational.webp" alt="A university teaching laboratory with fume hoods and long benches in daylight" width="1600" height="1200" loading="lazy"><div><span class="id text-sm">ANSI/TIA-4966</span><h3 class="d mt-1 text-2xl">Educational</h3></div><p>LED lighting and daylight harvesting, occupancy and air quality in teaching spaces, access control, lab equipment and fume-hood monitoring.</p></article>
+        <article class="grid gap-5 py-6 md:grid-cols-[240px_200px_1fr]"><img class="ph aspect-[16/10] w-full rounded-in object-cover" src="assets/img/residential.webp" alt="A quiet apartment hallway with a wall thermostat and recessed lighting" width="1600" height="1200" loading="lazy"><div><span class="id text-sm">ANSI/TIA-570</span><h3 class="d mt-1 text-2xl">Residential</h3></div><p>LED lighting, thermostats and zone valves, leak and smoke sensing, entry and camera devices, submetering.</p></article>
+        <article class="grid gap-5 py-6 md:grid-cols-[240px_200px_1fr]"><img class="ph aspect-[16/10] w-full rounded-in object-cover" src="assets/img/greenhouse.webp" alt="A long glass greenhouse bay with tomato plants, grow lights and hanging sensors" width="1600" height="1200" loading="lazy"><div><span class="text-sm font-medium text-edge">Beyond TIA scope</span><h3 class="d mt-1 text-2xl">Agriculture</h3></div><div><p>Canopy, substrate and air sensing at multiple heights, vents, screens, supplemental lighting, irrigation valves, dosing, heating and circulation fans.</p><p class="mt-2 text-sm text-muted">Controlled-environment agriculture sits outside TIA premises scope.</p></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 md:py-28" aria-labelledby="dc-h">
+    <div class="mx-auto grid max-w-page items-center gap-10 px-5 md:px-8 lg:grid-cols-12">
+      <img class="ph aspect-[4/3] w-full rounded-mod object-cover lg:col-span-6" src="assets/img/datacenter.webp" alt="A small edge data center room inside a commercial building with two rows of white cabinets" width="1600" height="1200" loading="lazy">
+      <div class="lg:col-span-5 lg:col-start-8">
+        <h2 id="dc-h" class="d text-3xl leading-tight">A data center is a domain type located within one of those premises domains, not a category beside them.</h2>
+        <p class="mt-5 text-muted">An edge data center is a room inside a store, a plant, a clinic, a campus or an office — cabled as part of that premises, powered from that building, and maintained by whoever maintains the rest of it. Two standards therefore apply at once: the premises standard that governs the building it sits in, and <span class="id text-ink">ANSI/TIA-942</span> — <span class="id text-ink">ISO/IEC 22237</span> internationally — for the data center it contains. The operational layer spans both, because the sensors and actuators the AI acts on are distributed through the premises, not confined to the cabinet.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t border-line bg-surface py-20 md:py-28" aria-label="IQGH, IQAG, IQDC, IQHI, IQHC, IQBI, IQRG, IQTI">
+    <div class="mx-auto max-w-page px-5 md:px-8">
+      <div class="overflow-x-auto rounded-mod border border-line">
+        <table class="rtable w-full text-left text-[15px] md:min-w-[760px]">
+          <tbody class="divide-y divide-line">
+            <tr><th scope="row" class="w-24 p-5 align-top"><span class="id text-base">IQGH</span></th><td class="w-56 p-5 align-top font-medium">Greenhouse</td><td class="p-5 align-top text-muted">Controlled-environment agriculture. High sensor density across canopy, substrate and air, in a corrosive high-humidity environment where conventional cabling and enclosures degrade.</td><td class="w-56 p-5 align-top text-sm text-edge">Beyond TIA scope · controlled-environment agriculture</td></tr>
+            <tr><th scope="row" class="p-5 align-top"><span class="id text-base">IQAG</span></th><td class="p-5 align-top font-medium">Autonomous Greenhouse</td><td class="p-5 align-top text-muted">Closed-loop cultivation where sensing drives actuation without operator intervention. Extends IQGH with the control-path requirements autonomy imposes.</td><td class="p-5 align-top text-sm text-edge">Beyond TIA scope · controlled-environment agriculture</td></tr>
+            <tr><th scope="row" class="p-5 align-top"><span class="id text-base">IQDC</span></th><td class="p-5 align-top font-medium">Data Center</td><td class="p-5 align-top text-muted">Facility-level operational intelligence — thermal, power, airflow and containment sensing at rack and row granularity, aligned to <span class="id text-ink">ANSI/TIA-942-C</span> spaces.</td><td class="p-5 align-top"><span class="id text-sm">ANSI/TIA-942</span></td></tr>
+            <tr><th scope="row" class="p-5 align-top"><span class="id text-base">IQHI</span></th><td class="p-5 align-top font-medium">Hospitality</td><td class="p-5 align-top text-muted">Guest-facing and back-of-house sensing across rooms, corridors and service areas, in a building type where pathway congestion and renovation cycles dominate cost.</td><td class="p-5 align-top text-sm"><span class="id">ANSI/TIA-568.1</span> · commercial</td></tr>
+            <tr><th scope="row" class="p-5 align-top"><span class="id text-base">IQHC</span></th><td class="p-5 align-top font-medium">Healthcare</td><td class="p-5 align-top text-muted">Clinical and facility sensing under regulatory constraint, where infection control, patient privacy and continuity of care govern what may be installed and where.</td><td class="p-5 align-top"><span class="id text-sm">ANSI/TIA-1179</span></td></tr>
+            <tr><th scope="row" class="p-5 align-top"><span class="id text-base">IQBI</span></th><td class="p-5 align-top font-medium">Intelligent Building</td><td class="p-5 align-top text-muted">The general commercial building profile — the baseline from which the vertical profiles are specialised.</td><td class="p-5 align-top text-sm"><span class="id">ANSI/TIA-568.1</span> · commercial</td></tr>
+            <tr><th scope="row" class="p-5 align-top"><span class="id text-base">IQRG</span></th><td class="p-5 align-top font-medium">Retail Grocery</td><td class="p-5 align-top text-muted">Refrigeration, shelf, environmental and footfall sensing across a store estate, where energy and shrink are the measurable outcomes.</td><td class="p-5 align-top text-sm"><span class="id">ANSI/TIA-568.1</span> · commercial</td></tr>
+            <tr class="bg-s2/60"><th scope="row" class="p-5 align-top"><span class="id text-base text-muted">IQTI</span></th><td class="p-5 align-top font-medium text-muted">TBD — expand IQTI</td><td class="p-5 align-top text-muted">TBD — one-paragraph summary</td><td class="p-5 align-top text-sm"><span class="id">ANSI/TIA-1005</span> · industrial</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mt-20 grid gap-8 lg:grid-cols-12">
+        <div class="lg:col-span-4"><h2 class="d h2">Common profile structure</h2><p class="mt-4 text-muted">Every domain profile is organised identically.</p></div>
+        <ol class="divide-y divide-line border-y border-line text-[15px] lg:col-span-8">
+          <li class="grid grid-cols-[40px_1fr] gap-x-4 gap-y-1 py-4 md:grid-cols-[40px_240px_1fr]"><span class="id text-muted">1</span><span class="font-medium">Sub-contexts</span><span class="col-start-2 text-muted md:col-start-auto">The six distinct environments within the domain.</span></li>
+          <li class="grid grid-cols-[40px_1fr] gap-x-4 gap-y-1 py-4 md:grid-cols-[40px_240px_1fr]"><span class="id text-muted">2</span><span class="font-medium">Pillars</span><span class="col-start-2 text-muted md:col-start-auto">The three outcomes the profile is built to deliver.</span></li>
+          <li class="grid grid-cols-[40px_1fr] gap-x-4 gap-y-1 py-4 md:grid-cols-[40px_240px_1fr]"><span class="id text-muted">3</span><span class="font-medium">Topology</span><span class="col-start-2 text-muted md:col-start-auto"><span class="id text-ink">MC → HC → HCP → EO → CA</span> as instantiated in this domain.</span></li>
+          <li class="grid grid-cols-[40px_1fr] gap-x-4 gap-y-1 py-4 md:grid-cols-[40px_240px_1fr]"><span class="id text-muted">4</span><span class="font-medium">Device and sensor catalogue</span><span class="col-start-2 text-muted md:col-start-auto">The device population and its measurement types.</span></li>
+          <li class="grid grid-cols-[40px_1fr] gap-x-4 gap-y-1 py-4 md:grid-cols-[40px_240px_1fr]"><span class="id text-muted">5</span><span class="font-medium">Protocol stack</span><span class="col-start-2 text-muted md:col-start-auto">Transport and application protocols in scope.</span></li>
+          <li class="grid grid-cols-[40px_1fr] gap-x-4 gap-y-1 py-4 md:grid-cols-[40px_240px_1fr]"><span class="id text-muted">6</span><span class="font-medium">Power architecture</span><span class="col-start-2 text-muted md:col-start-auto">Dominant power class and segment budget.</span></li>
+          <li class="grid grid-cols-[40px_1fr] gap-x-4 gap-y-1 py-4 md:grid-cols-[40px_240px_1fr]"><span class="id text-muted">7</span><span class="font-medium">Environmental classification</span><span class="col-start-2 text-muted md:col-start-auto">MICE classification for the domain's spaces.</span></li>
+          <li class="grid grid-cols-[40px_1fr] gap-x-4 gap-y-1 py-4 md:grid-cols-[40px_240px_1fr]"><span class="id text-muted">8</span><span class="font-medium">Workloads</span><span class="col-start-2 text-muted md:col-start-auto">The operational-intelligence workloads the fabric supports.</span></li>
+          <li class="grid grid-cols-[40px_1fr] gap-x-4 gap-y-1 py-4 md:grid-cols-[40px_240px_1fr]"><span class="id text-muted">9</span><span class="font-medium">Regulatory regimes</span><span class="col-start-2 text-muted md:col-start-auto">Codes and standards governing installation in this domain.</span></li>
+          <li class="grid grid-cols-[40px_1fr] gap-x-4 gap-y-1 bg-[#FFFBEA] py-4 md:grid-cols-[40px_240px_1fr]"><span class="id"></span><span class="font-medium">Annex B <span class="ml-2 font-normal">Deployment profiles</span></span><span class="col-start-2 text-muted md:col-start-auto">Two full representative configurations, plus four additional contexts.</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ================= EXAMPLES ================= -->
+<div class="page" data-page="examples">
+  <section class="mx-auto grid max-w-page gap-8 px-5 pb-16 pt-14 md:px-8 md:pt-20 lg:grid-cols-12" aria-labelledby="ex-h">
+    <h1 id="ex-h" class="d h1 lg:col-span-6">Pay for what you need</h1>
+    <p class="text-lg lg:col-span-5 lg:col-start-8 lg:pt-4">The business and operational infrastructure (<span class="id">AI IT</span>/<span class="id">AI OT</span>) is sized from an intake process. Ten answers are enough to estimate and cost a build.</p>
+  </section>
+
+  <section id="method" class="signal-line scroll-mt-20 border-t border-line bg-surface py-20 md:py-28" aria-labelledby="me-h">
+    <div class="mx-auto max-w-page px-5 md:px-8">
+      <h2 id="me-h" class="d h2">Sized from the process</h2>
+      <ol class="mt-12 grid gap-4 lg:grid-cols-[1.25fr_1fr_1fr]">
+        <li class="mod flex flex-col p-6"><p class="id text-sm text-edge">STEP 1</p><h3 class="d mt-2 text-2xl">Intake</h3><p class="mt-2 text-muted">Ten fields, and none of them is an equipment question.</p>
+          <ul class="mt-6 flex flex-wrap gap-1.5 text-sm"><li class="rounded-ctl bg-s2 px-2.5 py-1">Business type.</li><li class="rounded-ctl bg-s2 px-2.5 py-1">Sites, pilot through fleet.</li><li class="rounded-ctl bg-s2 px-2.5 py-1">Staff per site.</li><li class="rounded-ctl bg-s2 px-2.5 py-1">Hours and uptime.</li><li class="rounded-ctl bg-s2 px-2.5 py-1">The AI use cases.</li><li class="rounded-ctl bg-s2 px-2.5 py-1">The usage shape.</li><li class="rounded-ctl bg-s2 px-2.5 py-1">The model and context window.</li><li class="rounded-ctl bg-s2 px-2.5 py-1">Data and compliance obligations.</li><li class="rounded-ctl bg-s2 px-2.5 py-1">What the facility at each site actually is.</li></ul></li>
+        <li class="mod flex flex-col p-6"><p class="id text-sm text-edge">STEP 2</p><h3 class="d mt-2 text-2xl">Demand</h3><p class="mt-2 text-muted">The usage shape becomes a load — a sustained rate and a concurrency figure, meaning how many sessions are genuinely in flight, not how many staff exist.</p>
+          <svg viewBox="0 0 300 156" class="mt-auto w-full pt-6" role="img" aria-labelledby="ld5"><title id="ld5">A usage shape reduced to a sustained rate and a concurrency figure.</title>
+            <defs><clipPath id="ld5-above"><rect x="0" y="0" width="300" height="82"/></clipPath></defs>
+            <path d="M0 40H300M0 61H300M0 103H300" stroke="#F2F1EC" stroke-width="1"/>
+            <path d="M0 112 C 30 110, 45 80, 70 78 S 110 50, 135 54 S 170 90, 195 72 S 240 42, 260 60 S 290 100, 300 106 L300 120 L0 120 Z" fill="#FFF6CC"/>
+            <path d="M0 112 C 30 110, 45 80, 70 78 S 110 50, 135 54 S 170 90, 195 72 S 240 42, 260 60 S 290 100, 300 106 L300 120 L0 120 Z" fill="#F2C200" opacity=".55" clip-path="url(#ld5-above)"/>
+            <path d="M0 120 H300" class="sv sv-m"/>
+            <path d="M135 58 V120" stroke="#17160F" stroke-width="1" stroke-dasharray="2 3"/>
+            <path d="M0 82 H300" stroke="#8C6E00" stroke-width="1.5" stroke-dasharray="5 4"/>
+            <path id="ld5-curve" d="M0 112 C 30 110, 45 80, 70 78 S 110 50, 135 54 S 170 90, 195 72 S 240 42, 260 60 S 290 100, 300 106" class="sv" stroke-width="1.75"/>
+            <circle cx="135" cy="54" r="9" fill="#F2C200" opacity=".35"><animate attributeName="r" values="5;11;5" dur="2.4s" repeatCount="indefinite"/><animate attributeName="opacity" values=".45;0;.45" dur="2.4s" repeatCount="indefinite"/></circle>
+            <circle cx="135" cy="54" r="4.5" fill="#F2C200" stroke="#17160F" stroke-width="1.25"/>
+            <circle r="3.5" fill="#FFFFFE" stroke="#17160F" stroke-width="1.5"><animateMotion dur="7s" repeatCount="indefinite" rotate="0"><mpath href="#ld5-curve"/></animateMotion></circle>
+            <path d="M0 145 H18" stroke="#8C6E00" stroke-width="1.5" stroke-dasharray="5 4"/><text x="24" y="149" class="svt" fill="#8C6E00">a sustained rate</text>
+            <circle cx="146" cy="145" r="4" fill="#F2C200" stroke="#17160F" stroke-width="1.25"/><text x="156" y="149" class="svt">a concurrency figure</text>
+          </svg></li>
+        <li class="mod flex flex-col p-6"><p class="id text-sm text-edge">STEP 3</p><h3 class="d mt-2 text-2xl">Sizing</h3><p class="mt-2 text-muted">Computational-first. AI demand is compute, and compute sets the servers — their count, and the bandwidth the networking between them has to carry. The servers then size the data center: equipment racks, power draw, HVAC and floor area. The operational technology monitors the room and the equipment racks in it.</p></li>
+      </ol>
+      <ol class="mt-3 flex flex-wrap items-center gap-1.5 text-sm" aria-label="Sizing order"><li class="rounded-ctl bg-acc px-2.5 py-1 font-medium">compute</li><li aria-hidden="true" class="text-muted">→</li><li class="rounded-ctl border border-line bg-surface px-2.5 py-1">servers</li><li aria-hidden="true" class="text-muted">→</li><li class="rounded-ctl border border-line bg-surface px-2.5 py-1">networking</li><li aria-hidden="true" class="text-muted">→</li><li class="rounded-ctl border border-line bg-surface px-2.5 py-1">equipment racks</li><li aria-hidden="true" class="text-muted">→</li><li class="rounded-ctl border border-line bg-surface px-2.5 py-1">power draw</li><li aria-hidden="true" class="text-muted">→</li><li class="rounded-ctl border border-line bg-surface px-2.5 py-1">HVAC</li><li aria-hidden="true" class="text-muted">→</li><li class="rounded-ctl border border-line bg-surface px-2.5 py-1">floor area</li></ol>
+      <p class="d mt-14 max-w-4xl text-2xl leading-snug md:text-3xl">The data center is a consequence, not a starting point. <span class="text-muted">It is whatever the demand adds up to, and every line in it traces back to an intake answer.</span></p>
+    </div>
+  </section>
+
+  <!-- clinic readout -->
+  <section class="py-20 md:py-28" aria-labelledby="cl-h">
+    <div class="mx-auto max-w-page px-5 md:px-8">
+      <div class="grid gap-6 lg:grid-cols-12">
+        <div class="lg:col-span-6"><p class="mod-t">Worked example — clinical</p><h2 id="cl-h" class="d h2 mt-3">A multi-site dental group</h2><p class="mt-3 text-muted">Taken through the same ten fields.</p></div>
+      </div>
+      <div class="mt-10 grid gap-4 lg:grid-cols-12">
+        <div class="mod overflow-hidden lg:col-span-5">
+          <img class="aspect-[16/9] w-full object-cover" src="assets/img/healthcare.webp" alt="A dental treatment room" width="1600" height="1200" loading="lazy">
+          <table class="w-full text-left text-[15px]">
+            <tbody class="divide-y divide-line">
+              <tr><th scope="row" class="px-5 py-3 font-normal text-muted">Vertical / business type</th><td class="px-5 py-3">Clinical · dental group</td></tr>
+              <tr><th scope="row" class="px-5 py-3 font-normal text-muted">Staff per site</th><td class="px-5 py-3 tabular-nums">~20</td></tr>
+              <tr><th scope="row" class="px-5 py-3 font-normal text-muted">Hours / uptime</th><td class="px-5 py-3">Mon–Sat ~9–8 · effectively all-day</td></tr>
+              <tr><th scope="row" class="px-5 py-3 font-normal text-muted">AI use cases</th><td class="px-5 py-3">intake · clinical retrieval · scheduling · monitoring</td></tr>
+              <tr><th scope="row" class="px-5 py-3 font-normal text-muted">Data &amp; compliance</th><td class="px-5 py-3">PHI on-site · HIPAA (sovereignty required)</td></tr>
+              <tr><th scope="row" class="px-5 py-3 font-normal text-muted">Facility per site</th><td class="px-5 py-3">back-of-house IT closet · standard power/cooling</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="grid gap-4 sm:grid-cols-2 lg:col-span-7">
+          <p class="d text-xl sm:col-span-2">What the sizing produced.</p>
+          <!-- lead KPI + supporting bar -->
+          <article class="mod p-6 sm:col-span-2">
+            <div class="flex flex-wrap items-end justify-between gap-6">
+              <div><p class="mod-t">Facility load</p><p class="kpi mt-3">about 1 kW</p><p class="mt-2 text-muted">of IT load,</p></div>
+              <p class="max-w-xs text-sm text-muted">roughly 1.4 kW once cooling overhead is included; about half a ton of cooling.</p>
+            </div>
+            <svg viewBox="0 0 600 64" class="mt-6 w-full" role="img" aria-labelledby="fl5"><title id="fl5">About 1 kW of IT load, roughly 1.4 kW once cooling overhead is included.</title>
+              <rect x="0" y="8" width="600" height="20" rx="4" fill="#F2F1EC"/>
+              <rect class="bar" x="0" y="8" width="428" height="20" rx="4" fill="#17160F"/>
+              <rect class="bar2" x="428" y="8" width="172" height="20" rx="0" fill="#F2C200"/>
+              <text x="0" y="52" class="svt">about 1 kW of IT load</text>
+              <text x="600" y="52" text-anchor="end" class="svt">roughly 1.4 kW</text>
+            </svg>
+          </article>
+          <article class="mod p-6"><p class="mod-t">Compute per office</p>
+            <div class="mt-4 flex gap-2" aria-hidden="true"><span class="h-12 w-8 rounded-[6px] bg-ink"></span><span class="h-12 w-8 rounded-[6px] border border-dashed border-ink"></span></div>
+            <p class="mt-4">a single accelerator carries an entire office at full speed; <span class="text-muted">the node is specified with two, for redundancy and headroom rather than throughput.</span></p></article>
+          <article class="mod p-6"><p class="mod-t">Utilization</p>
+            <div class="mt-4 h-2 overflow-hidden rounded-full bg-s2" aria-hidden="true"><span class="util block h-full w-[12%] rounded-full bg-acc"></span></div>
+            <p class="mt-4">the node runs at a small fraction of its capacity <span class="text-muted">at the busiest hour of the day.</span></p></article>
+          <article class="mod p-6"><p class="mod-t">Floor area</p>
+            <svg viewBox="0 0 120 56" class="mt-4 h-14" aria-hidden="true"><rect x="1" y="1" width="54" height="54" rx="4" class="sv sv-m sv-d"/><rect x="12" y="12" width="32" height="32" rx="2" fill="#17160F"/></svg>
+            <p class="mt-4">about five square feet, <span class="text-muted">one locked 12U cabinet in the existing IT closet.</span></p></article>
+          <article class="mod p-6"><p class="mod-t">Deployment</p>
+            <svg viewBox="0 0 160 56" class="mt-4 h-14" aria-hidden="true"><rect x="66" y="2" width="28" height="22" rx="4" fill="#17160F"/><path d="M80 24 V34 M20 34 H140 M20 34 V40 M60 34 V40 M100 34 V40 M140 34 V40" class="run"/><rect x="10" y="40" width="20" height="14" rx="3" class="sv"/><rect x="50" y="40" width="20" height="14" rx="3" class="sv"/><rect x="90" y="40" width="20" height="14" rx="3" class="sv"/><rect x="130" y="40" width="20" height="14" rx="3" class="sv"/></svg>
+            <p class="mt-4">because a node runs so far below capacity, one serves several offices rather than one. <b class="font-medium">A sizing outcome, not a product decision.</b></p></article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- cabinet -->
+  <section class="border-t border-line bg-surface py-20 md:py-28" aria-labelledby="cb-h">
+    <div class="mx-auto grid max-w-page gap-10 px-5 md:px-8 lg:grid-cols-12">
+      <div class="lg:col-span-5">
+        <p class="mod-t">Inside the cabinet</p>
+        <h2 id="cb-h" class="d h2 mt-3">A complete data center in one rack</h2>
+        <p class="mt-5 text-muted"><span class="id text-ink">ANSI/TIA-942</span> rates a facility across four domains — electrical, mechanical, telecommunications and architectural — and defines the spaces that carry it. At this scale the standard does not ask for a raised-floor data hall. It asks for the same spaces, instantiated in one locked cabinet.</p>
+        <img class="mt-8 w-full max-w-md mix-blend-multiply" src="assets/img/cabinet-render.webp" alt="A compact locked 12U cabinet with a glass door, a patch panel, a switch, a server and a UPS inside" width="1600" height="1200" loading="lazy">
+      </div>
+      <div class="lg:col-span-6 lg:col-start-7">
+        <figure class="mod p-5">
+          <figcaption class="mod-t flex items-center gap-2"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><rect x="2.5" y="6" width="9" height="6.5" rx="1.5" fill="#17160F"/><path d="M4.5 6V4.5a2.5 2.5 0 0 1 5 0V6" fill="none" stroke="#17160F" stroke-width="1.4"/></svg>Locked cabinet · 12U</figcaption>
+          <div class="mt-4 rounded-[16px] bg-[#3A5A9C] p-2 shadow-[inset_0_0_0_1px_#17160F]">
+            <div class="grid grid-cols-[20px_1fr_20px] gap-x-1.5 rounded-[11px] bg-[#2B467F] p-1.5">
+              <ol aria-hidden="true" class="id grid gap-1 text-[10px] text-white/70" style="grid-template-rows:repeat(12,34px)"><li class="flex items-center justify-center">12</li><li class="flex items-center justify-center">11</li><li class="flex items-center justify-center">10</li><li class="flex items-center justify-center">9</li><li class="flex items-center justify-center">8</li><li class="flex items-center justify-center">7</li><li class="flex items-center justify-center">6</li><li class="flex items-center justify-center">5</li><li class="flex items-center justify-center">4</li><li class="flex items-center justify-center">3</li><li class="flex items-center justify-center">2</li><li class="flex items-center justify-center">1</li></ol>
+              <ol class="grid gap-1" style="grid-template-rows:repeat(12,34px)">
+                <li class="flex items-center justify-between gap-3 rounded-[5px] border border-ink bg-surface px-3 text-[13px] leading-tight sm:text-sm"><span>Service demarcation and uplink</span><span class="flex items-center gap-3"><span class="hidden gap-[3px] md:flex" aria-hidden="true"><i class="block h-2 w-2 rounded-[2px] border border-ink/60"></i><i class="block h-2 w-2 rounded-[2px] border border-ink/60"></i><i class="block h-2 w-2 rounded-[2px] border border-ink/60"></i><i class="block h-2 w-2 rounded-[2px] border border-ink/60"></i><i class="block h-2 w-2 rounded-[2px] border border-ink/60"></i><i class="block h-2 w-2 rounded-[2px] border border-ink/60"></i><i class="block h-2 w-2 rounded-[2px] border border-ink/60"></i><i class="block h-2 w-2 rounded-[2px] border border-ink/60"></i></span><span class="id rounded-[4px] bg-s2 px-1.5 py-0.5 text-xs">MDA</span></span></li>
+                <li class="flex items-center justify-between gap-3 rounded-[5px] border border-ink bg-surface px-3 text-[13px] leading-tight sm:text-sm"><span>Switch — premises network and cross-connect</span><span class="flex items-center gap-3"><span class="hidden items-center gap-[3px] md:flex" aria-hidden="true"><i class="rk-led block h-1.5 w-1.5 rounded-full bg-[#4CC27E]"></i><i class="rk-led block h-1.5 w-1.5 rounded-full bg-[#4CC27E] [animation-delay:.5s]"></i><i class="rk-led mr-1 block h-1.5 w-1.5 rounded-full bg-acc [animation-delay:1.1s]"></i><i class="block h-2 w-2 rounded-[2px] bg-ink/80"></i><i class="block h-2 w-2 rounded-[2px] bg-ink/80"></i><i class="block h-2 w-2 rounded-[2px] bg-ink/80"></i><i class="block h-2 w-2 rounded-[2px] bg-ink/80"></i><i class="block h-2 w-2 rounded-[2px] bg-ink/80"></i><i class="block h-2 w-2 rounded-[2px] bg-ink/80"></i></span><span class="id rounded-[4px] bg-s2 px-1.5 py-0.5 text-xs">HDA</span></span></li>
+                <li aria-hidden="true" class="flex items-center justify-center rounded-[5px] border border-[#D6D3C7] bg-s2"><span class="rk-vent h-2 w-1/2"></span></li><li aria-hidden="true" class="flex items-center justify-center rounded-[5px] border border-[#D6D3C7] bg-s2"><span class="rk-vent h-2 w-1/2"></span></li>
+                <li class="row-span-4 flex flex-col justify-between rounded-[5px] border-t-[3px] border-acc bg-[#1C2A4D] p-3 text-sm text-canvas">
+                  <span class="flex items-start justify-between gap-3"><span>AI node — accelerators, storage, telemetry</span><span class="flex items-center gap-3"><span class="flex gap-1" aria-hidden="true"><i class="rk-led block h-1.5 w-1.5 rounded-full bg-[#4CC27E]"></i><i class="rk-led block h-1.5 w-1.5 rounded-full bg-[#4CC27E] [animation-delay:.7s]"></i><i class="rk-led block h-1.5 w-1.5 rounded-full bg-acc [animation-delay:1.3s]"></i></span><span class="id text-xs text-acc">EDA</span></span></span>
+                  <span class="hidden grid-cols-8 gap-1.5 sm:grid" aria-hidden="true"><i class="block h-7 rounded-[3px] border border-white/25 bg-white/[.04]"></i><i class="block h-7 rounded-[3px] border border-white/25 bg-white/[.04]"></i><i class="block h-7 rounded-[3px] border border-white/25 bg-white/[.04]"></i><i class="block h-7 rounded-[3px] border border-white/25 bg-white/[.04]"></i><i class="block h-7 rounded-[3px] border border-white/25 bg-white/[.04]"></i><i class="block h-7 rounded-[3px] border border-white/25 bg-white/[.04]"></i><i class="block h-7 rounded-[3px] border border-white/25 bg-white/[.04]"></i><i class="block h-7 rounded-[3px] border border-white/25 bg-white/[.04]"></i></span>
+                  <span class="rk-vent rk-vent-l hidden h-2 sm:block" aria-hidden="true"></span>
+                </li>
+                <li aria-hidden="true" class="flex items-center justify-center rounded-[5px] border border-[#D6D3C7] bg-s2"><span class="rk-vent h-2 w-1/2"></span></li><li aria-hidden="true" class="flex items-center justify-center rounded-[5px] border border-[#D6D3C7] bg-s2"><span class="rk-vent h-2 w-1/2"></span></li>
+                <li class="row-span-2 flex items-center justify-between gap-3 rounded-[5px] bg-acc px-3 text-sm shadow-[inset_0_0_0_1px_#17160F]"><span>UPS — ride-through and orderly shutdown</span><span class="flex items-center gap-3"><span class="hidden items-end gap-[3px] sm:flex" aria-hidden="true"><i class="block h-2 w-1.5 rounded-[1px] bg-ink"></i><i class="block h-2.5 w-1.5 rounded-[1px] bg-ink"></i><i class="block h-3 w-1.5 rounded-[1px] bg-ink"></i><i class="block h-3.5 w-1.5 rounded-[1px] bg-ink"></i><i class="rk-led block h-4 w-1.5 rounded-[1px] bg-ink"></i></span><span class="text-xs font-medium">Electrical · support</span></span></li>
+              </ol>
+              <ol aria-hidden="true" class="grid gap-1" style="grid-template-rows:repeat(12,34px)"><li class="flex items-center justify-center gap-1"><i class="block h-1 w-1 rounded-full bg-white/50"></i><i class="block h-1 w-1 rounded-full bg-white/50"></i></li><li class="flex items-center justify-center gap-1"><i class="block h-1 w-1 rounded-full bg-white/50"></i><i class="block h-1 w-1 rounded-full bg-white/50"></i></li><li class="flex items-center justify-center gap-1"><i class="block h-1 w-1 rounded-full bg-white/50"></i><i class="block h-1 w-1 rounded-full bg-white/50"></i></li><li class="flex items-center justify-center gap-1"><i class="block h-1 w-1 rounded-full bg-white/50"></i><i class="block h-1 w-1 rounded-full bg-white/50"></i></li><li class="flex items-center justify-center gap-1"><i class="block h-1 w-1 rounded-full bg-white/50"></i><i class="block h-1 w-1 rounded-full bg-white/50"></i></li><li class="flex items-center justify-center gap-1"><i class="block h-1 w-1 rounded-full bg-white/50"></i><i class="block h-1 w-1 rounded-full bg-white/50"></i></li><li class="flex items-center justify-center gap-1"><i class="block h-1 w-1 rounded-full bg-white/50"></i><i class="block h-1 w-1 rounded-full bg-white/50"></i></li><li class="flex items-center justify-center gap-1"><i class="block h-1 w-1 rounded-full bg-white/50"></i><i class="block h-1 w-1 rounded-full bg-white/50"></i></li><li class="flex items-center justify-center gap-1"><i class="block h-1 w-1 rounded-full bg-white/50"></i><i class="block h-1 w-1 rounded-full bg-white/50"></i></li><li class="flex items-center justify-center gap-1"><i class="block h-1 w-1 rounded-full bg-white/50"></i><i class="block h-1 w-1 rounded-full bg-white/50"></i></li><li class="flex items-center justify-center gap-1"><i class="block h-1 w-1 rounded-full bg-white/50"></i><i class="block h-1 w-1 rounded-full bg-white/50"></i></li><li class="flex items-center justify-center gap-1"><i class="block h-1 w-1 rounded-full bg-white/50"></i><i class="block h-1 w-1 rounded-full bg-white/50"></i></li></ol>
+            </div>
+          </div>
+          <div aria-hidden="true" class="mx-6 flex justify-between"><i class="block h-2 w-8 rounded-b-[4px] bg-[#2B467F]"></i><i class="block h-2 w-8 rounded-b-[4px] bg-[#2B467F]"></i></div>
+        </figure>
+        <dl class="mt-6 grid gap-x-8 sm:grid-cols-2">
+          <div class="border-t border-line py-4"><dt class="d text-lg">Telecommunications</dt><dd class="mt-1 text-sm text-muted">demarcation, uplink and horizontal cross-connect, all in-cabinet. Structured cabling reaches the rest of the premises; single-pair cabling reaches the sensors and actuators beyond it.</dd></div>
+          <div class="border-t border-line py-4"><dt class="d text-lg">Electrical</dt><dd class="mt-1 text-sm text-muted">one UPS on the building supply. About 1 kW of IT load, an ordinary circuit rather than a new service.</dd></div>
+          <div class="border-t border-line py-4"><dt class="d text-lg">Mechanical</dt><dd class="mt-1 text-sm text-muted">about half a ton of cooling, inside the envelope the closet already maintains.</dd></div>
+          <div class="border-t border-line py-4"><dt class="d text-lg">Architectural</dt><dd class="mt-1 text-sm text-muted">roughly five square feet. The cabinet locks, which is what gives a compliance officer an answer about physical access.</dd></div>
+        </dl>
+        <p class="mt-6 font-medium">The reduced build is what the standard permits at this size, not a shortcut around it. <span class="font-normal text-muted">The rated facility domains are the same ones the resident node monitors.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- plant -->
+  <section class="py-20 md:py-28" aria-labelledby="pl-h">
+    <div class="mx-auto max-w-page px-5 md:px-8">
+      <div class="grid gap-10 lg:grid-cols-12">
+        <div class="lg:col-span-5">
+          <p class="mod-t">Worked example — manufacturing</p>
+          <h2 id="pl-h" class="d h2 mt-3">Predictive maintenance in a plant</h2>
+          <p class="mt-5 text-muted">The same intake, run for a manufacturing site: predictive maintenance on rotating equipment, with in-line visual inspection alongside it.</p>
+          <p class="mt-4 inline-block rounded-ctl bg-s2 px-2.5 py-1 text-sm">Illustrative rather than a deployment.</p>
+          <img class="ph mt-8 aspect-[4/3] w-full rounded-mod object-cover" src="assets/img/industrial.webp" alt="Motors and pumps on a factory floor fitted with vibration sensors" width="1600" height="1200" loading="lazy">
+        </div>
+        <dl class="divide-y divide-line self-start border-y border-line lg:col-span-6 lg:col-start-7">
+          <div class="grid gap-1 py-5 md:grid-cols-[170px_1fr]"><dt class="font-medium">Sensed population</dt><dd class="text-muted">Hundreds of measurement points across the process, not dozens across a building. Each asset carries vibration, current and temperature sensing; power is classified per device and budgeted across the segment.</dd></div>
+          <div class="grid gap-1 py-5 md:grid-cols-[170px_1fr]"><dt class="font-medium">Reach</dt><dd class="text-muted">Single-pair Ethernet to the asset, up to a kilometre on one pair, so the whole plant is served from one equipment room without distributed closets on the floor.</dd></div>
+          <div class="grid gap-1 py-5 md:grid-cols-[170px_1fr]"><dt class="font-medium">Where inference runs</dt><dd class="text-muted">Feature extraction at the device or the segment controller; the node scores features continuously and pulls full waveform only on a trigger. Streaming raw waveform from every asset is what makes a plant look like it needs hyperscale — it does not.</dd></div>
+          <div class="grid gap-1 bg-[#FFFBEA] px-3 py-5 md:grid-cols-[158px_1fr]"><dt class="font-medium">Retention</dt><dd class="text-muted"><b class="font-medium text-ink">The binding constraint.</b> Triggered waveform snapshots and inspection imagery, held for the window that quality and warranty obligations require, size the storage tier and with it the cabinet.</dd></div>
+          <div class="grid gap-1 py-5 md:grid-cols-[170px_1fr]"><dt class="font-medium">Environment</dt><dd class="text-muted">Vibration, temperature, electrical noise and washdown govern enclosure and cabling selection at the asset.</dd></div>
+        </dl>
+      </div>
+      <p class="d mt-14 max-w-4xl text-2xl leading-snug">Retention rather than compute sets the size of the build, because the evidence a maintenance decision rests on has to be kept. <span class="text-muted">And the operational layer reaches into the process itself, so the same architecture that watches the room also watches the machines the room exists to serve.</span></p>
+    </div>
+  </section>
+
+  <!-- greenhouse -->
+  <section class="border-t border-line bg-surface py-20 md:py-28" aria-labelledby="gh-h">
+    <div class="mx-auto max-w-page px-5 md:px-8">
+      <div class="relative overflow-hidden rounded-mod">
+        <video class="lazyv aspect-[16/9] w-full object-cover md:aspect-[21/9]" muted loop playsinline preload="none" poster="assets/img/greenhouse.webp" aria-hidden="true"><source data-src="assets/video/greenhouse.mp4" type="video/mp4"></video>
+        <p class="absolute bottom-4 left-4 rounded-ctl bg-surface/95 px-3 py-1.5 text-sm">The crop sets the target; the facility holds it.</p>
+      </div>
+      <div class="mt-10 grid gap-10 lg:grid-cols-12">
+        <div class="lg:col-span-5">
+          <p class="mod-t">Worked example — agriculture</p>
+          <h2 id="gh-h" class="d h2 mt-3">An autonomous greenhouse</h2>
+          <p class="mt-5 text-muted">Controlled-environment agriculture, where sensing drives actuation without an operator in the loop.</p>
+          <p class="mt-4 inline-block rounded-ctl bg-s2 px-2.5 py-1 text-sm">Also illustrative rather than a deployment.</p>
+        </div>
+        <dl class="divide-y divide-line border-y border-line lg:col-span-6 lg:col-start-7">
+          <div class="grid gap-1 py-5 md:grid-cols-[170px_1fr]"><dt class="font-medium">Sensed population</dt><dd class="text-muted">Dense and three-dimensional — canopy, substrate and air at multiple heights across every bay: temperature, humidity, vapour-pressure deficit, CO<sub>2</sub>, light, substrate moisture and conductivity, plus imaging for crop state.</dd></div>
+          <div class="grid gap-1 bg-[#FFFBEA] px-3 py-5 md:grid-cols-[158px_1fr]"><dt class="font-medium">Actuated population</dt><dd class="text-muted"><b class="font-medium text-ink">The distinguishing feature.</b> Vents, screens, supplemental lighting, irrigation valves, dosing, heating and circulation fans are driven by the same layer that senses. Closed-loop control, not monitoring with alerts.</dd></div>
+          <div class="grid gap-1 py-5 md:grid-cols-[170px_1fr]"><dt class="font-medium">Environment</dt><dd class="text-muted">Corrosive: sustained high humidity, condensation, UV and washdown degrade conventional cabling and enclosures. Media and enclosure selection is a survivability decision before it is a performance one.</dd></div>
+          <div class="grid gap-1 py-5 md:grid-cols-[170px_1fr]"><dt class="font-medium">Reach and power</dt><dd class="text-muted">Bays are long and there is nowhere to put a closet in a growing space. A kilometre on a single pair, with power classified per device, reaches the canopy from the head house without intermediate electronics in the humidity.</dd></div>
+          <div class="grid gap-1 py-5 md:grid-cols-[170px_1fr]"><dt class="font-medium">Where inference runs</dt><dd class="text-muted">On site, and it must stay there. A control loop that holds an environmental setpoint cannot depend on a rural connection, and the consequence of a missed actuation is measured in crop rather than in an alert.</dd></div>
+          <div class="grid gap-1 py-5 md:grid-cols-[170px_1fr]"><dt class="font-medium">Retention</dt><dd class="text-muted">Growing records against outcome — conditions held, interventions made, yield achieved — kept across a season so the next crop is planned from evidence rather than habit.</dd></div>
+        </dl>
+      </div>
+      <p class="d mt-14 max-w-4xl text-2xl leading-snug">This is the case that most clearly separates the two AI domains and then rejoins them. <span class="text-muted">The operational layer is running the facility outright, and the business layer above it — yield, labour, energy per unit of crop — reads the same sensor population to a different end.</span></p>
+    </div>
+  </section>
+</div>
+</main>
+<footer class="border-t border-line">
+  <div class="mx-auto flex max-w-page flex-col gap-4 px-5 py-10 text-sm text-muted md:flex-row md:items-center md:justify-between md:px-8">
+    <p>© SenTekse LLC. AIxAI and the domain profile designations are the work of SenTekse LLC.</p>
+    <nav class="flex gap-6" aria-label="Footer"><a class="lnk" href="#overview">Overview</a><a class="lnk" href="#framework">Framework</a><a class="lnk" href="#domains">Domains</a><a class="lnk" href="#examples">Examples</a></nav>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const NS = 'http://www.w3.org/2000/svg';
+  const el = (t, a, p) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); if (p) p.append(e); return e; };
+  const C = Math.cos(Math.PI / 6), S = Math.sin(Math.PI / 6), f = n => n.toFixed(1);
+  const iso = (o, x, y, z = 0) => [o.cx + (x - y) * C * o.s, o.cy + (x + y) * S * o.s - z * o.s];
+  const pts = (o, arr) => arr.map(p => iso(o, ...p).map(f).join(',')).join(' ');
+  // shaded box: top / left (+y face) / right (+x face)
+  function box(o, g, x, y, z, w, d, h, tone = ['#F2F1EC', '#E3E1D8', '#FFFFFE'], edge) {
+    el('polygon', { points: pts(o, [[x, y + d, z], [x + w, y + d, z], [x + w, y + d, z + h], [x, y + d, z + h]]), fill: tone[1], stroke: '#17160F', 'stroke-width': .8, 'stroke-linejoin': 'round' }, g);
+    el('polygon', { points: pts(o, [[x + w, y, z], [x + w, y + d, z], [x + w, y + d, z + h], [x + w, y, z + h]]), fill: tone[2], stroke: '#17160F', 'stroke-width': .8, 'stroke-linejoin': 'round' }, g);
+    el('polygon', { points: pts(o, [[x, y, z + h], [x + w, y, z + h], [x + w, y + d, z + h], [x, y + d, z + h]]), fill: tone[0], stroke: '#17160F', 'stroke-width': .8, 'stroke-linejoin': 'round' }, g);
+    if (edge) { const a = iso(o, x, y + d, z + h), b = iso(o, x + w, y + d, z + h); el('line', { x1: f(a[0]), y1: f(a[1]), x2: f(b[0]), y2: f(b[1]), stroke: edge, 'stroke-width': 3, 'stroke-linecap': 'round' }, g); }
+  }
+
+  /* ---------- signature: the premises object ---------- */
+  const svg = document.getElementById('premises');
+  if (svg) {
+    const W = 16, D = 12, H = 3, T = 0.22, s = 22, INK = '#17160F';
+    // top-right of the 760 × 540 box, so the legend card sits in the open corner below the floor's left edge
+    const o = { cx: 433, cy: 40 + H * s, s };
+    const base = el('g', {}, svg);
+    const poly = (arr, a) => el('polygon', Object.assign({ points: pts(o, arr), stroke: INK, 'stroke-width': 1, 'stroke-linejoin': 'round' }, a), base);
+    const line = (p, q, a) => { const m = iso(o, ...p), n = iso(o, ...q); return el('line', Object.assign({ x1: f(m[0]), y1: f(m[1]), x2: f(n[0]), y2: f(n[1]) }, a), base); };
+    // rounded plan: a quarter circle of radius R at each corner of the floor, and where the two walls meet
+    const R = 1, arc = (x, y, r, a0, a1, n = 8) => Array.from({ length: n + 1 }, (_, i) => { const t = (a0 + (a1 - a0) * i / n) * Math.PI / 180; return [x + r * Math.cos(t), y + r * Math.sin(t)]; });
+    const at = (ring, z) => ring.map(q => [q[0], q[1], z]);
+    const floor = [...arc(W - R, R, R, -90, 0), ...arc(W - R, D - R, R, 0, 90), ...arc(R, D - R, R, 90, 180), ...arc(R, R, R, 180, 270)];
+    // floor, the IT closet's zone, and a faint module grid
+    poly(floor, { fill: '#FFFFFE' });
+    poly([[4.2, 0], [4.2, 3.6], [0, 3.6], ...arc(R, R, R, 180, 270)], { fill: '#FFFBEA', stroke: 'none' });
+    for (let i = 2; i < W; i += 2) line([i, 0], [i, D], { stroke: '#ECEAE2' });
+    for (let j = 2; j < D; j += 2) line([0, j], [W, j], { stroke: '#ECEAE2' });
+    el('polyline', { points: pts(o, [[0, 3.6], [4.2, 3.6], [4.2, 0]]), fill: 'none', stroke: INK, 'stroke-width': 1, 'stroke-dasharray': '4 4' }, base);
+    // cutaway walls: left and back faces joined by a curved corner, shaded between the two, then one outline
+    const corner = arc(R, R, R, 180, 270), wallRun = [[0, D - R], ...corner, [W - R, 0]];
+    poly(at([[0, R], [0, D - R]], 0).concat(at([[0, D - R], [0, R]], H)), { fill: '#E9E7DF', stroke: 'none' });
+    poly(at([[R, 0], [W - R, 0]], 0).concat(at([[W - R, 0], [R, 0]], H)), { fill: '#F2F1EC', stroke: 'none' });
+    const mix = (t) => '#' + [[0xE9, 0xF2], [0xE7, 0xF1], [0xDF, 0xEC]].map(([u, v]) => Math.round(u + (v - u) * t).toString(16).padStart(2, '0')).join('');
+    for (let i = 0; i < corner.length - 1; i++) poly([[...corner[i], 0], [...corner[i + 1], 0], [...corner[i + 1], H], [...corner[i], H]], { fill: mix((i + 0.5) / (corner.length - 1)), stroke: mix((i + 0.5) / (corner.length - 1)), 'stroke-width': 0.6 });
+    poly(at(wallRun, 0).concat(at(wallRun.slice().reverse(), H)), { fill: 'none' });
+    // thickness: the two cut ends, then the cap following the curve
+    poly([[W - R, -T, 0], [W - R, 0, 0], [W - R, 0, H], [W - R, -T, H]], { fill: '#FFFFFE' });
+    poly([[-T, D - R, 0], [0, D - R, 0], [0, D - R, H], [-T, D - R, H]], { fill: '#FFFFFE' });
+    poly(at(wallRun, H).concat(at([[W - R, -T], ...arc(R, R, R + T, 270, 180), [-T, D - R]], H)), { fill: '#FFFFFE' });
+
+    const runs = el('g', {}, svg), pulses = el('g', {}, svg), devs = el('g', {}, svg);
+    // cabinet: the node
+    const cab = el('g', {}, devs);
+    box(o, cab, 1.2, 0.9, 0, 1.3, 1.3, 2.7, ['#5577BC', '#3A5A9C', '#6A8BCB'], '#F2C200');
+
+    // device population: key, position, glyph
+    const D_ = [
+      ['room', 6, 0, 1.8, 'disc'], ['room', 12.5, 0, 1.8, 'disc'], ['room', 0, 6.8, 1.8, 'disc'], ['room', 0, 9.6, 1.2, 'disc'],
+      ['power', 2.9, 1.0, 0, 'box', [0.8, 0.6, 1.0]], ['power', 0, 5.2, 1.0, 'plate'],
+      ['cool', 13.6, 1.0, 0, 'box', [1.6, 1.0, 1.3]], ['cool', 3.3, 0, 2.2, 'plate'],
+      ['cam', 9.8, 0, 2.6, 'tri'], ['cam', 0, 10.1, 2.6, 'tri'], ['cam', 14.1, 0, 2.6, 'tri'],
+      ['access', 7.6, 0, 1.1, 'door'], ['access', 7.05, 0, 1.2, 'reader'],
+      ['fire', 11.2, 0, 2.5, 'hex'], ['fire', 0, 2.2, 2.5, 'hex'], ['fire', 0, 8.3, 0.9, 'meter'],
+      ['mach', 9.6, 6.8, 0, 'box', [2.2, 1.4, 1.1]], ['mach', 12.6, 8.8, 0, 'box', [1.2, 1.2, 0.9]]
+    ].sort((p, q) => (p[1] + p[2]) - (q[1] + q[2]));   // far to near, so nearer devices cover farther ones
+
+    // single-pair runs share two trunks: one along the back wall, one along the left wall
+    const BT = 0.45;
+    function wireOf(x, y, z, g, sz) {
+      if (g === 'door') return null;
+      if (g === 'box') {
+        if (x < 4.2 && y < 3.6) return [[2.5, 1.3, 0], [x, 1.3, 0]];
+        const cx = x + sz[0] / 2;
+        return [[2.6, 1.5, 0], [2.6, BT, 0], [cx, BT, 0], [cx, y, 0]];
+      }
+      if (y === 0) return [[2.6, 1.5, 0], [2.6, BT, 0], [x, BT, 0], [x, 0, 0], [x, 0, Math.max(z - 0.3, 0)]];
+      return [[1.2, 1.6, 0], [BT, 1.6, 0], [BT, y, 0], [0, y, 0], [0, y, Math.max(z - 0.3, 0)]];
+    }
+
+    const items = [];
+    D_.forEach(([k, x, y, z, g, sz]) => {
+      const gd = el('g', { class: 'dev', 'data-k': k }, devs);
+      const p = iso(o, x, y, z);
+      if (g === 'box') box(o, gd, x, y, z, sz[0], sz[1], sz[2]);
+      else if (g === 'disc') el('circle', { cx: f(p[0]), cy: f(p[1]), r: 6, fill: '#FFFFFE', stroke: INK, 'stroke-width': 1.25 }, gd);
+      else if (g === 'tri') el('path', { d: `M${f(p[0] - 7)} ${f(p[1] - 4)}h14l-7 10z`, fill: '#FFFFFE', stroke: INK, 'stroke-width': 1.25, 'stroke-linejoin': 'round' }, gd);
+      else if (g === 'hex') { const r = 6.5; el('path', { d: 'M' + [0, 1, 2, 3, 4, 5].map(i => f(p[0] + r * Math.cos(Math.PI / 3 * i + Math.PI / 6)) + ' ' + f(p[1] + r * Math.sin(Math.PI / 3 * i + Math.PI / 6))).join('L') + 'Z', fill: '#FFFFFE', stroke: INK, 'stroke-width': 1.25 }, gd); }
+      else if (g === 'plate' || g === 'meter' || g === 'reader') el('rect', { x: f(p[0] - 6), y: f(p[1] - 8), width: 12, height: 16, rx: 2, fill: '#FFFFFE', stroke: INK, 'stroke-width': 1.25 }, gd);
+      else if (g === 'door') el('polygon', { points: pts(o, [[x, 0, 0], [x + 1.3, 0, 0], [x + 1.3, 0, 2.2], [x, 0, 2.2]]), fill: '#FFFFFE', stroke: INK, 'stroke-width': 1.25, 'stroke-linejoin': 'round' }, gd);
+      const r = wireOf(x, y, z, g, sz);
+      const rp = el('path', { d: r ? 'M' + r.map(q => iso(o, ...q).map(f).join(' ')).join('L') : '', class: 'run', 'data-k': k }, runs);
+      const dist = r ? r.reduce((a, q, i) => i ? a + Math.abs(q[0] - r[i - 1][0]) + Math.abs(q[1] - r[i - 1][1]) : 0, 0) : 0;
+      // a signal pulse that keeps travelling the same run, cabinet outward
+      const pp = el('path', { d: rp.getAttribute('d'), class: 'run pulse', 'data-k': k }, pulses);
+      items.push({ k, gd, rp, pp, dist });
+    });
+
+    // the legend card overlays the open corner only at xl; below that it sits under the drawing, so crop to the room
+    const xl = matchMedia('(min-width: 1280px)');
+    const fitBox = () => svg.setAttribute('viewBox', xl.matches ? '0 0 760 540' : '176 14 584 418');
+    fitBox(); xl.addEventListener('change', fitBox);
+
+    // the cabinet's name: a bordered pill on a short leader, above everything it would otherwise cross
+    const tag = el('g', { class: 'cab-tag' }, svg);
+    const an = iso(o, 2.5, 0.9, 2.7), lx = an[0] + 16, ly = an[1] - 17;
+    el('path', { d: `M${f(an[0] + 2)} ${f(an[1])}L${f(lx - 4)} ${f(ly)}H${f(lx)}`, fill: 'none', stroke: INK, 'stroke-width': 1 }, tag);
+    el('circle', { cx: f(an[0] + 2), cy: f(an[1]), r: 2.2, fill: INK }, tag);
+    const pill = el('rect', { x: f(lx), y: f(ly - 14), height: 28, rx: 14, fill: '#FFFFFE', stroke: INK, 'stroke-width': 1 }, tag);
+    el('circle', { cx: f(lx + 15), cy: f(ly), r: 3.5, fill: '#F2C200' }, tag);
+    const lab = el('text', { x: f(lx + 26), y: f(ly + 4.5), class: 'svb' }, tag); lab.textContent = 'Locked cabinet · 12U';
+    const tw = lab.getBBox().width || lab.textContent.length * 7.4;
+    pill.setAttribute('width', f(tw + 40));
+
+    // one orchestrated moment: runs draw outward from the cabinet, nearest first
+    if (!reduce) {
+      items.forEach(it => {
+        const L = it.rp.getTotalLength();
+        it.rp.style.strokeDasharray = L; it.rp.style.strokeDashoffset = L;
+        it.gd.style.opacity = 0;
+        const delay = 300 + it.dist * 70;
+        it.rp.animate([{ strokeDashoffset: L }, { strokeDashoffset: 0 }], { duration: 650, delay, easing: 'cubic-bezier(.2,0,0,1)', fill: 'forwards' });
+        // once shown, hand opacity back to the stylesheet so the legend filter can dim it
+        const fade = it.gd.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 250, delay: delay + 560, fill: 'forwards' });
+        fade.onfinish = () => { it.gd.style.opacity = ''; fade.cancel(); };
+      });
+    }
+
+    // always moving: pulses run out from the cabinet along every run, each on its own clock; paused off screen
+    const loops = [];
+    items.forEach((it, i) => {
+      const L = it.pp.getTotalLength();
+      if (!L) { it.pp.remove(); it.pp = null; return; }
+      const seg = 10;
+      it.pp.style.strokeDasharray = `${seg} ${L + seg}`;
+      it.pp.style.strokeDashoffset = seg;
+      if (reduce) { it.pp.style.display = 'none'; return; }
+      loops.push(it.pp.animate([{ strokeDashoffset: seg }, { strokeDashoffset: -L }], {
+        duration: 700 + L * 9, delay: 300 + it.dist * 70 + 650 + (i % 5) * 380, endDelay: 900 + (i * 617) % 1600,
+        iterations: Infinity, easing: 'cubic-bezier(.4,0,.6,1)'
+      }));
+    });
+    new IntersectionObserver(([e]) => loops.forEach(a => e.isIntersecting ? a.play() : a.pause())).observe(svg);
+
+    // get off their cloud: both scenes share one clock; still under reduced motion, paused off screen
+    ['rt-sub', 'rt-own'].forEach(id => {
+      const sv = document.getElementById(id); if (!sv) return;
+      if (reduce) { sv.pauseAnimations(); sv.setCurrentTime(0.95 * (id === 'rt-sub' ? 4 : 1)); return; }
+      new IntersectionObserver(([e]) => e.isIntersecting ? sv.unpauseAnimations() : sv.pauseAnimations()).observe(sv);
+    });
+
+    // legend = filter
+    const legend = document.getElementById('legend');
+    const pick = (k) => {
+      legend.querySelectorAll('.lg').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.k === (k || ''))));
+      svg.classList.toggle('dim', !!k);
+      items.forEach(it => { const hit = !!k && it.k === k; it.gd.classList.toggle('hit', hit); it.rp.classList.toggle('hit', hit); it.pp?.classList.toggle('hit', hit); });
+    };
+    // AI OT (first chip) shows the whole room; pressing the active filter again, clicking the drawing, or Esc do the same
+    legend.addEventListener('click', e => {
+      const b = e.target.closest('.lg'); if (!b) return;
+      pick(!b.dataset.k || b.getAttribute('aria-pressed') === 'true' ? null : b.dataset.k);
+    });
+    svg.addEventListener('click', () => { if (svg.classList.contains('dim')) pick(null); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && svg.classList.contains('dim')) pick(null); });
+  }
+
+  /* ---------- extended stack: select a slab ---------- */
+  const L = [
+    ['L7', 'Application', 'Operational semantics. ONVIF for imaging, BACnet and Modbus for building and process equipment, OSDP for access control, MQTT and HTTP for telemetry and transactions.'],
+    ['L6', 'Presentation', 'Encoding and encryption — TLS, JSON, XML.'],
+    ['L5', 'Session', 'Session establishment and synchronisation — RTP and RTCP state for media, SOAP envelopes for web services.'],
+    ['L4', 'Transport', 'End-to-end delivery — TCP, UDP, QUIC.'],
+    ['L3', 'Network', 'Addressing and routing — IPv4, IPv6.'],
+    ['L2', 'Data link', 'Frame delivery on the link. Ethernet MAC per IEEE 802.3; PLCA at the Reconciliation Sublayer per IEEE 802.3cg Clause 148 on multidrop segments.'],
+    ['L1', 'Physical', 'Signalling on the medium — the IEEE 802.3 PHY. 10BASE-T1L and 10BASE-T1S per IEEE 802.3cg-2019; 10BASE-T1M and the mixing segment per IEEE 802.3da.'],
+    ['L0', 'Media', 'The transmission medium itself — balanced twisted-pair cabling, including installed two-conductor cabling qualified by field test rather than by category rating. ANSI/TIA-568 series; ANSI/TIA-568.5 and ANSI/TIA-5071 for single-pair cabling and its field qualification.'],
+    ['G1', 'Pathways and Spaces', 'Conduit, cable tray, raceway, riser and equipment space. Determines whether a new run is physically possible and at what cost. ANSI/TIA-569; ANSI/TIA-942 for the data center spaces themselves.'],
+    ['G2', 'Power', 'Power delivered over the data pair, classified per node and budgeted across the segment, through to fault-managed power and conventional mains at the top end. IEEE 802.3 power clauses — PoDL, PoE, MPoE — and UL 1400 for fault-managed power.']
+  ];
+  const sl = document.getElementById('slabs');
+  if (sl) {
+    const o = { cx: 420, cy: 372, s: 21 }, gap = 1.75, ot = i => i >= 7;
+    const slabs = [];
+    for (let i = L.length - 1; i >= 0; i--) {           // draw bottom (G2) first
+      const z = (L.length - 1 - i) * gap;
+      const g = el('g', { class: 'slab', tabindex: 0, role: 'button', 'aria-label': L[i][0] + ' ' + L[i][1] }, sl);
+      box(o, g, 0, 0, z, 9, 9, .45, ot(i) ? ['#FFF6CC', '#E8D98F', '#FFFBEA'] : undefined, ot(i) ? '#8C6E00' : null);
+      const a = iso(o, 0, 9, z + .2);
+      el('line', { x1: f(a[0] - 4), y1: f(a[1]), x2: f(a[0] - 34), y2: f(a[1]), stroke: '#A3A094', 'stroke-width': 1 }, g);
+      const tx = el('text', { x: f(a[0] - 40), y: f(a[1] + 4), 'text-anchor': 'end', class: 'svm' }, g); tx.textContent = L[i][0] + '  ' + L[i][1];
+      slabs[i] = g;
+      const pick = () => select(i);
+      g.addEventListener('click', pick); g.addEventListener('keydown', e => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), pick()));
+    }
+    const list = document.getElementById('ly-list');
+    L.forEach((l, i) => { const li = document.createElement('li'); const b = document.createElement('button'); b.className = 'id w-full rounded-ctl border border-line py-1.5 text-sm'; b.textContent = l[0]; b.addEventListener('click', () => select(i)); li.append(b); list.append(li); });
+    const all = document.getElementById('ly-all');
+    L.forEach(l => { const d = document.createElement('div'); d.className = 'grid gap-1 py-3 md:grid-cols-[60px_200px_1fr]'; d.innerHTML = `<dt class="id">${l[0]}</dt><dd class="font-medium">${l[1]}</dd><dd class="text-muted"></dd>`; d.lastChild.textContent = l[2]; all.append(d); });
+    function select(i) {
+      slabs.forEach((g, j) => { g.style.opacity = j === i ? 1 : .42; g.style.transform = j === i ? 'translateX(-14px)' : ''; g.style.transition = 'opacity .2s, transform .25s cubic-bezier(.2,0,0,1)'; });
+      document.getElementById('ly-tag').textContent = L[i][0];
+      document.getElementById('ly-name').textContent = L[i][1];
+      document.getElementById('ly-body').textContent = L[i][2];
+      [...list.querySelectorAll('button')].forEach((b, j) => { b.style.background = j === i ? '#F2C200' : ''; b.setAttribute('aria-pressed', String(j === i)); });
+    }
+    select(7);
+  }
+
+  /* ---------- router ---------- */
+  const pages = [...document.querySelectorAll('.page')];
+  function route() {
+    const h = (location.hash || '#overview').slice(1);
+    const name = pages.some(p => p.dataset.page === h) ? h : (document.getElementById(h)?.closest('.page')?.dataset.page || 'overview');
+    const changed = !pages.find(p => p.dataset.page === name).classList.contains('on');
+    pages.forEach(p => p.classList.toggle('on', p.dataset.page === name));
+    document.querySelectorAll('[data-nav]').forEach(a => a.dataset.nav === name ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
+    document.querySelector('.burger').textContent = ({ overview: 'Overview', framework: 'Framework', domains: 'Domains', examples: 'Examples' })[name];
+    const anchor = pages.some(p => p.dataset.page === h) ? null : document.getElementById(h);
+    requestAnimationFrame(() => anchor ? window.scrollTo({ top: anchor.getBoundingClientRect().top + scrollY - 72, behavior: reduce || changed ? 'auto' : 'smooth' }) : changed && window.scrollTo(0, 0));
+    menu.hidden = true; burger.setAttribute('aria-expanded', 'false');
+  }
+  const burger = document.querySelector('.burger'), menu = document.getElementById('menu');
+  burger.addEventListener('click', () => { const o = menu.hidden; menu.hidden = !o; burger.setAttribute('aria-expanded', String(o)); });
+  addEventListener('hashchange', route);
+  document.querySelectorAll('.lazyv').forEach(v => new IntersectionObserver(([e]) => {
+    if (e.isIntersecting) { const s = v.querySelector('source[data-src]'); if (s) { s.src = s.dataset.src; s.removeAttribute('data-src'); v.load(); } if (!reduce) v.play().catch(() => {}); } else v.pause();
+  }, { threshold: .2 }).observe(v));
+  route();
+})();
+</script>
+</body>
+</html>

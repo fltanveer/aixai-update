@@ -1,0 +1,35 @@
+export const metadata = {
+  title: "A complete data center in one rack",
+  description: "ANSI/TIA-942 rates a facility across four domains — electrical, mechanical, telecommunications and architectural — and defines the spaces that carry it.",
+  date: "2026-10-26",
+  tag: "Examples",
+  image: "/assets/img/cabinet.webp",
+  imageAlt: "A locked wall cabinet with patch cabling in an IT closet",
+};
+
+`ANSI/TIA-942` rates a facility across four domains — electrical, mechanical, telecommunications and architectural — and defines the spaces that carry it. At this scale the standard does not ask for a raised-floor data hall. It asks for the same spaces, instantiated in one locked cabinet.
+
+| Locked cabinet · 12U | |
+| --- | --- |
+| Service demarcation and uplink | `MDA` |
+| Switch — premises network and cross-connect | `HDA` |
+| AI node — accelerators, storage, telemetry | `EDA` |
+| UPS — ride-through and orderly shutdown | Electrical · support |
+
+## Telecommunications
+
+— demarcation, uplink and horizontal cross-connect, all in-cabinet. Structured cabling reaches the rest of the premises; single-pair cabling reaches the sensors and actuators beyond it.
+
+## Electrical
+
+— one UPS on the building supply. About 1 kW of IT load, an ordinary circuit rather than a new service.
+
+## Mechanical
+
+— about half a ton of cooling, inside the envelope the closet already maintains.
+
+## Architectural
+
+— roughly five square feet. The cabinet locks, which is what gives a compliance officer an answer about physical access.
+
+> The reduced build is what the standard permits at this size, not a shortcut around it. The rated facility domains are the same ones the resident node monitors.
